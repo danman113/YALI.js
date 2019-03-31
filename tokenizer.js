@@ -60,7 +60,12 @@ const tokenMap = {
     tokenizer.addToken(tokenEnum.COMMA)
   },
   '.': (tokenizer) => {
-    tokenizer.addToken(tokenEnum.DOT)
+    // Handles leading decimals for number literals
+    if (isDigit(tokenizer.peek())) {
+      tokenizer.handleNumberLiterals()
+    } else {
+      tokenizer.addToken(tokenEnum.DOT)
+    }
   },
   '-': (tokenizer) => {
     tokenizer.addToken(tokenEnum.MINUS)

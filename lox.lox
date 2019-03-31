@@ -33,6 +33,7 @@
   while
 
   // Idents
-  hello this is a bunch of silly idents
+  hello here is a bunch of silly idents
+  object.method()
 
 }
