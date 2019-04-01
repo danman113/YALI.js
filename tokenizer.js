@@ -103,7 +103,7 @@ const tokenMap = {
   '\t': noop,
   '\r': noop,
   '\n': (tokenizer) => {
-    tokenizer.line++
+    tokenizer.newline()
   },
   '"': (tokenizer) => {
     tokenizer.handleStringLiterals()
@@ -119,6 +119,8 @@ class Tokenizer {
     this.source = source
     this.length = source.length
     this.tokens = []
+    this.startPosition = null
+    this.column = 0
     this.start = 0
     this.line = 1
     this.current = 0
@@ -126,7 +128,7 @@ class Tokenizer {
 
   handleStringLiterals () {
     while(this.peek() !== '"' && this.peek() !== '') {
-      if (this.peek() === '\n') this.line++
+      if (this.peek() === '\n') this.newline()
       this.chomp()
     }
     if (this.peek() === '') throw Error('Unfinished string', this.line)
@@ -158,6 +160,7 @@ class Tokenizer {
   scanTokens () {
     while (this.current < this.length) {
       const c = this.chomp()
+      this.startPosition = new Coordinate(this.column - 1, this.line)
       if (!tokenMap[c]) {
         if (isDigit(c)) {
           this.handleNumberLiterals()
@@ -176,11 +179,21 @@ class Tokenizer {
 
   addToken (type, literal = null) {
     const text = this.source.substring(this.start, this.current)
-    this.tokens.push(new Token(type, text, literal, this.line))
+    this.tokens.push(new Token(type, text, literal, new Coordinate(this.column, this.line), this.startPosition))
+  }
+
+  increment () {
+    this.current++
+    this.column++
+  }
+
+  newline () {
+    this.line++
+    this.column = 0
   }
 
   chomp () {
-    this.current++
+    this.increment()
     return this.source.charAt(this.current - 1)
   }
 
@@ -190,18 +203,26 @@ class Tokenizer {
 
   nextMatch (expected) {
     if (this.peek() !== expected) return false
-    this.current++
+    this.increment()
     return true
   }
 
 }
 
+class Coordinate {
+  constructor (col, line) {
+    this.col = col
+    this.line = line
+  }
+}
+
 class Token {
-  constructor (type, lexeme, literal, line) {
+  constructor (type, lexeme, literal, endCoordinates, startCoordinates) {
     this.type = type
     this.lexeme = lexeme
     this.literal = literal
-    this.line = line
+    this.startCoordinates = startCoordinates
+    this.endCoordinates = endCoordinates
   }
 }
 
