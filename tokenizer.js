@@ -115,6 +115,13 @@ const isAlpha = str => /[a-zA-Z_]/.test(str)
 const isAlphaNumeric = str => isAlpha(str) || isDigit(str)
 
 class Tokenizer {
+  static get tokens () {
+    return tokens
+  }
+
+  static get tokenEnum () {
+    return tokenEnum
+  }
   constructor (source) {
     this.source = source
     this.length = source.length
@@ -174,6 +181,7 @@ class Tokenizer {
       }
       this.start = this.current
     }
+    this.addToken(tokenEnum.EOF)
     return this.tokens
   }
 

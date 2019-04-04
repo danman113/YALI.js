@@ -2,10 +2,15 @@
 const fs = require('fs')
 const readline = require('readline')
 const Tokenizer = require('./tokenizer')
+const Parser = require('./parser')
+console.log(Tokenizer.tokenEnum)
 
 const run = code => {
   const tokenizer = new Tokenizer(code)
-  console.log(tokenizer.scanTokens())
+  const tokens = tokenizer.scanTokens()
+  console.log(tokens)
+  const parser = new Parser(tokens)
+  console.log(parser.expression())
 }
 
 const runPrompt = () => {
