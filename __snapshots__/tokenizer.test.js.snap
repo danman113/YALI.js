@@ -1,0 +1,805 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tokenizer Returns correct line number when handling unexpected characters 1`] = `
+Coordinate {
+  "col": 0,
+  "index": 0,
+  "line": 1,
+}
+`;
+
+exports[`Tokenizer Returns correct line number when handling unexpected characters 2`] = `
+Coordinate {
+  "col": 1,
+  "index": 1,
+  "line": 1,
+}
+`;
+
+exports[`Tokenizer Returns correct line number when handling unexpected characters 3`] = `
+Coordinate {
+  "col": 8,
+  "index": 8,
+  "line": 1,
+}
+`;
+
+exports[`Tokenizer Returns correct line number when handling unexpected characters 4`] = `
+Coordinate {
+  "col": 9,
+  "index": 9,
+  "line": 1,
+}
+`;
+
+exports[`Tokenizer Returns correct line number when handling unexpected characters 5`] = `
+Coordinate {
+  "col": 16,
+  "index": 39,
+  "line": 3,
+}
+`;
+
+exports[`Tokenizer Returns correct line number when handling unexpected characters 6`] = `
+Coordinate {
+  "col": 17,
+  "index": 40,
+  "line": 3,
+}
+`;
+
+exports[`Tokenizer Returns correct line number when handling unfinished strings 1`] = `
+"\\"<strong>
+        I am a strong dude
+      </strong>"
+`;
+
+exports[`Tokenizer Tokenizer basically works 1`] = `
+Array [
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 5,
+      "index": 26,
+      "line": 3,
+    },
+    "lexeme": "(",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 4,
+      "index": 25,
+      "line": 3,
+    },
+    "type": 0,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 7,
+      "index": 28,
+      "line": 3,
+    },
+    "lexeme": ")",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 27,
+      "line": 3,
+    },
+    "type": 1,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 10,
+      "index": 31,
+      "line": 3,
+    },
+    "lexeme": ">=",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 8,
+      "index": 29,
+      "line": 3,
+    },
+    "type": 16,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 13,
+      "index": 34,
+      "line": 3,
+    },
+    "lexeme": "<=",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 11,
+      "index": 32,
+      "line": 3,
+    },
+    "type": 18,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 16,
+      "index": 37,
+      "line": 3,
+    },
+    "lexeme": "==",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 14,
+      "index": 35,
+      "line": 3,
+    },
+    "type": 14,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 18,
+      "index": 39,
+      "line": 3,
+    },
+    "lexeme": "=",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 17,
+      "index": 38,
+      "line": 3,
+    },
+    "type": 13,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 20,
+      "index": 41,
+      "line": 3,
+    },
+    "lexeme": ">",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 19,
+      "index": 40,
+      "line": 3,
+    },
+    "type": 15,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 22,
+      "index": 43,
+      "line": 3,
+    },
+    "lexeme": "<",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 21,
+      "index": 42,
+      "line": 3,
+    },
+    "type": 17,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 24,
+      "index": 45,
+      "line": 3,
+    },
+    "lexeme": "{",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 23,
+      "index": 44,
+      "line": 3,
+    },
+    "type": 2,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 8,
+      "index": 75,
+      "line": 5,
+    },
+    "lexeme": "20",
+    "literal": 20,
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 73,
+      "line": 5,
+    },
+    "type": 21,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 9,
+      "index": 76,
+      "line": 5,
+    },
+    "lexeme": ";",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 8,
+      "index": 75,
+      "line": 5,
+    },
+    "type": 8,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 11,
+      "index": 88,
+      "line": 6,
+    },
+    "lexeme": "10000",
+    "literal": 10000,
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 83,
+      "line": 6,
+    },
+    "type": 21,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 12,
+      "index": 89,
+      "line": 6,
+    },
+    "lexeme": ";",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 11,
+      "index": 88,
+      "line": 6,
+    },
+    "type": 8,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 11,
+      "index": 101,
+      "line": 7,
+    },
+    "lexeme": ".2000",
+    "literal": 0.2,
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 96,
+      "line": 7,
+    },
+    "type": 21,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 12,
+      "index": 102,
+      "line": 7,
+    },
+    "lexeme": ";",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 11,
+      "index": 101,
+      "line": 7,
+    },
+    "type": 8,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 12,
+      "index": 115,
+      "line": 8,
+    },
+    "lexeme": "23.001",
+    "literal": 23.001,
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 109,
+      "line": 8,
+    },
+    "type": 21,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 13,
+      "index": 116,
+      "line": 8,
+    },
+    "lexeme": ";",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 12,
+      "index": 115,
+      "line": 8,
+    },
+    "type": 8,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 8,
+      "index": 229,
+      "line": 16,
+    },
+    "lexeme": "\\"
+      hello this is a string
+      <hello>
+        JSX BABY
+      </hello>
+      \\"",
+    "literal": "
+      hello this is a string
+      <hello>
+        JSX BABY
+      </hello>
+      ",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 145,
+      "line": 11,
+    },
+    "type": 20,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 9,
+      "index": 263,
+      "line": 19,
+    },
+    "lexeme": "and",
+    "literal": "and",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 260,
+      "line": 19,
+    },
+    "type": 22,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 11,
+      "index": 275,
+      "line": 20,
+    },
+    "lexeme": "class",
+    "literal": "class",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 270,
+      "line": 20,
+    },
+    "type": 23,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 10,
+      "index": 286,
+      "line": 21,
+    },
+    "lexeme": "else",
+    "literal": "else",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 282,
+      "line": 21,
+    },
+    "type": 24,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 11,
+      "index": 298,
+      "line": 22,
+    },
+    "lexeme": "false",
+    "literal": "false",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 293,
+      "line": 22,
+    },
+    "type": 25,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 9,
+      "index": 308,
+      "line": 23,
+    },
+    "lexeme": "for",
+    "literal": "for",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 305,
+      "line": 23,
+    },
+    "type": 27,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 9,
+      "index": 318,
+      "line": 24,
+    },
+    "lexeme": "fun",
+    "literal": "fun",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 315,
+      "line": 24,
+    },
+    "type": 26,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 8,
+      "index": 327,
+      "line": 25,
+    },
+    "lexeme": "if",
+    "literal": "if",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 325,
+      "line": 25,
+    },
+    "type": 28,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 9,
+      "index": 337,
+      "line": 26,
+    },
+    "lexeme": "nil",
+    "literal": "nil",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 334,
+      "line": 26,
+    },
+    "type": 29,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 8,
+      "index": 346,
+      "line": 27,
+    },
+    "lexeme": "or",
+    "literal": "or",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 344,
+      "line": 27,
+    },
+    "type": 30,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 11,
+      "index": 358,
+      "line": 28,
+    },
+    "lexeme": "print",
+    "literal": "print",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 353,
+      "line": 28,
+    },
+    "type": 31,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 12,
+      "index": 371,
+      "line": 29,
+    },
+    "lexeme": "return",
+    "literal": "return",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 365,
+      "line": 29,
+    },
+    "type": 32,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 11,
+      "index": 383,
+      "line": 30,
+    },
+    "lexeme": "super",
+    "literal": "super",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 378,
+      "line": 30,
+    },
+    "type": 33,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 10,
+      "index": 394,
+      "line": 31,
+    },
+    "lexeme": "this",
+    "literal": "this",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 390,
+      "line": 31,
+    },
+    "type": 34,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 10,
+      "index": 405,
+      "line": 32,
+    },
+    "lexeme": "true",
+    "literal": "true",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 401,
+      "line": 32,
+    },
+    "type": 35,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 9,
+      "index": 415,
+      "line": 33,
+    },
+    "lexeme": "var",
+    "literal": "var",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 412,
+      "line": 33,
+    },
+    "type": 36,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 11,
+      "index": 427,
+      "line": 34,
+    },
+    "lexeme": "while",
+    "literal": "while",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 422,
+      "line": 34,
+    },
+    "type": 37,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 11,
+      "index": 456,
+      "line": 37,
+    },
+    "lexeme": "hello",
+    "literal": "hello",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 451,
+      "line": 37,
+    },
+    "type": 19,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 16,
+      "index": 461,
+      "line": 37,
+    },
+    "lexeme": "here",
+    "literal": "here",
+    "startCoordinates": Coordinate {
+      "col": 12,
+      "index": 457,
+      "line": 37,
+    },
+    "type": 19,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 19,
+      "index": 464,
+      "line": 37,
+    },
+    "lexeme": "is",
+    "literal": "is",
+    "startCoordinates": Coordinate {
+      "col": 17,
+      "index": 462,
+      "line": 37,
+    },
+    "type": 19,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 21,
+      "index": 466,
+      "line": 37,
+    },
+    "lexeme": "a",
+    "literal": "a",
+    "startCoordinates": Coordinate {
+      "col": 20,
+      "index": 465,
+      "line": 37,
+    },
+    "type": 19,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 27,
+      "index": 472,
+      "line": 37,
+    },
+    "lexeme": "bunch",
+    "literal": "bunch",
+    "startCoordinates": Coordinate {
+      "col": 22,
+      "index": 467,
+      "line": 37,
+    },
+    "type": 19,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 30,
+      "index": 475,
+      "line": 37,
+    },
+    "lexeme": "of",
+    "literal": "of",
+    "startCoordinates": Coordinate {
+      "col": 28,
+      "index": 473,
+      "line": 37,
+    },
+    "type": 19,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 36,
+      "index": 481,
+      "line": 37,
+    },
+    "lexeme": "silly",
+    "literal": "silly",
+    "startCoordinates": Coordinate {
+      "col": 31,
+      "index": 476,
+      "line": 37,
+    },
+    "type": 19,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 43,
+      "index": 488,
+      "line": 37,
+    },
+    "lexeme": "idents",
+    "literal": "idents",
+    "startCoordinates": Coordinate {
+      "col": 37,
+      "index": 482,
+      "line": 37,
+    },
+    "type": 19,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 12,
+      "index": 501,
+      "line": 38,
+    },
+    "lexeme": "object",
+    "literal": "object",
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 495,
+      "line": 38,
+    },
+    "type": 19,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 13,
+      "index": 502,
+      "line": 38,
+    },
+    "lexeme": ".",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 12,
+      "index": 501,
+      "line": 38,
+    },
+    "type": 5,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 19,
+      "index": 508,
+      "line": 38,
+    },
+    "lexeme": "method",
+    "literal": "method",
+    "startCoordinates": Coordinate {
+      "col": 13,
+      "index": 502,
+      "line": 38,
+    },
+    "type": 19,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 20,
+      "index": 509,
+      "line": 38,
+    },
+    "lexeme": "(",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 19,
+      "index": 508,
+      "line": 38,
+    },
+    "type": 0,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 21,
+      "index": 510,
+      "line": 38,
+    },
+    "lexeme": ")",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 20,
+      "index": 509,
+      "line": 38,
+    },
+    "type": 1,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 5,
+      "index": 516,
+      "line": 39,
+    },
+    "lexeme": "}",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 4,
+      "index": 515,
+      "line": 39,
+    },
+    "type": 3,
+  },
+  Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 521,
+      "line": 40,
+    },
+    "lexeme": "",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 3,
+      "index": 520,
+      "line": 40,
+    },
+    "type": 38,
+  },
+]
+`;

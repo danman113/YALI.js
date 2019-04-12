@@ -1,4 +1,4 @@
-const Error = require('./errors').error
+const { error: Error } = require('./errors')
 const noop = () => {}
 
 const tokens = `
@@ -138,7 +138,7 @@ class Tokenizer {
       if (this.peek() === '\n') this.newline()
       this.chomp()
     }
-    if (this.peek() === '') throw Error('Unfinished string', this.line)
+    if (this.peek() === '') throw Error('Unfinished string', this.startPosition, this.endPosition)
     this.chomp()
     const value = this.source.substring(this.start + 1, this.current - 1)
     this.addToken(tokenEnum.STRING, value)
@@ -167,14 +167,15 @@ class Tokenizer {
   scanTokens () {
     while (this.current < this.length) {
       const c = this.chomp()
-      this.startPosition = new Coordinate(this.column - 1, this.line)
+      this.startPosition = new Coordinate(this.column - 1, this.line, this.current - 1)
       if (!tokenMap[c]) {
         if (isDigit(c)) {
           this.handleNumberLiterals()
         } else if (isAlpha(c)) {
           this.handleIdentifiers()
         } else {
-          throw Error(`Unexpected character ${c}`, this.line)
+          // Column isn't -1 because we haven't iterated column yet
+          throw Error(`Unexpected character ${c}`, this.startPosition, new Coordinate(this.column, this.line, this.current))
         }
       } else {
         tokenMap[c](this)
@@ -185,9 +186,13 @@ class Tokenizer {
     return this.tokens
   }
 
+  get endPosition () {
+    return new Coordinate(this.column - 1, this.line, this.current)
+  }
+
   addToken (type, literal = null) {
     const text = this.source.substring(this.start, this.current)
-    this.tokens.push(new Token(type, text, literal, new Coordinate(this.column, this.line), this.startPosition))
+    this.tokens.push(new Token(type, text, literal, new Coordinate(this.column, this.line, this.current), this.startPosition))
   }
 
   increment () {
@@ -218,9 +223,10 @@ class Tokenizer {
 }
 
 class Coordinate {
-  constructor (col, line) {
+  constructor (col, line, index) {
     this.col = col
     this.line = line
+    this.index = index
   }
 }
 

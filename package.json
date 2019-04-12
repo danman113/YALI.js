@@ -1,0 +1,25 @@
+{
+  "name": "yali",
+  "version": "1.0.0",
+  "description": "Yet Another Lox Interpreter. Javascript Implementation of the Lox Programming Language",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danman113/YALI.js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danman113/YALI.js/issues"
+  },
+  "homepage": "https://github.com/danman113/YALI.js#readme",
+  "devDependencies": {
+    "jest": "^24.7.1"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2"
+  }
+}

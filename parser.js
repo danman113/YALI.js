@@ -1,6 +1,6 @@
 const tokenizer = require('./tokenizer')
 const { Binary, Unary, Literal, Grouping } = require('./types')
-const Error = require('./errors').error
+const { parseError: ParseError } = require('./errors')
 const token = tokenizer.tokenEnum
 
 class Parser {
@@ -60,12 +60,14 @@ class Parser {
       this.consume(token.RIGHT_PAREN, `Expect ')' after expression.`)
       return Grouping(expr)
     }
+
+    throw ParseError('Expected Expression', this.peek())
   }
 
   consume (type, err) {
     if (this.check(type)) return this.advance()
 
-    throw Error(err, this.peek().endCoordinates.line)
+    throw ParseError(err, this.peek())
   }
 
   match (...tokens) {
@@ -92,7 +94,7 @@ class Parser {
   }
 
   previous () {
-    if (this.current <= 0) throw Error('Expected previous but found nothing', this.peek().endCoordinates.line)
+    if (this.current <= 0) throw ParseError('Expected previous but found nothing', this.peek())
     return this.tokens[this.current - 1]
   }
 

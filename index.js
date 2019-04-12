@@ -1,16 +1,27 @@
 #! /usr/bin/env node
 const fs = require('fs')
+const chalk = require('chalk')
 const readline = require('readline')
 const Tokenizer = require('./tokenizer')
 const Parser = require('./parser')
 console.log(Tokenizer.tokenEnum)
 
 const run = code => {
-  const tokenizer = new Tokenizer(code)
-  const tokens = tokenizer.scanTokens()
-  console.log(tokens)
-  const parser = new Parser(tokens)
-  console.log(parser.expression())
+  try {
+    const tokenizer = new Tokenizer(code)
+    const tokens = tokenizer.scanTokens()
+    const parser = new Parser(tokens)
+    console.log(parser.expression())
+  } catch (e) {
+    console.log(e)
+    console.error('Parse Error:', e.toString(), `at ${e.endCoordinates.line}:${e.endCoordinates.col + 1}`)
+
+    const lastIndex = code.lastIndexOf('\n', e.startCoordinates.index)
+    const preErrorStart = lastIndex < 0 ? 0 : lastIndex
+    const preErrorSection = code.substr(preErrorStart, e.startCoordinates.index)
+    const errorSection = code.substr(e.startCoordinates.index, e.endCoordinates.index)
+    console.error(preErrorSection + chalk.bgRed(errorSection))
+  }
 }
 
 const runPrompt = () => {
