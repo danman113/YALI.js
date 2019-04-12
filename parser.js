@@ -19,7 +19,7 @@ class Parser {
     while(this.match(...operators)) {
       const operator = this.previous()
       const right = this.comparison()
-      expr = Binary(expr, operator, right)
+      expr = new Binary(expr, operator, right)
     }
     return expr
   }
@@ -44,21 +44,21 @@ class Parser {
     if (this.match(token.BANG, token.MINUS)) {
       const operator = this.previous()
       const right = this.unary()
-      return Unary(operator, right)
+      return new Unary(operator, right)
     }
     return this.primary()
   }
 
   primary () {
-    if (this.match(token.FALSE)) return Literal(false)
-    if (this.match(token.TRUE)) return Literal(true)
-    if (this.match(token.NIL)) return Literal(null)
-    if (this.match(token.NUMBER, token.STRING)) return Literal(this.previous().literal)
+    if (this.match(token.FALSE)) return new Literal(false)
+    if (this.match(token.TRUE)) return new Literal(true)
+    if (this.match(token.NIL)) return new Literal(null)
+    if (this.match(token.NUMBER, token.STRING)) return new Literal(this.previous().literal)
 
     if (this.match(token.LEFT_PAREN)) {
       const expr = this.expression()
       this.consume(token.RIGHT_PAREN, `Expect ')' after expression.`)
-      return Grouping(expr)
+      return new Grouping(expr)
     }
 
     throw ParseError('Expected Expression', this.peek())

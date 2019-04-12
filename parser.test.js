@@ -1,6 +1,5 @@
 const Tokenizer = require('./tokenizer')
 const Parser = require('./parser')
-const { Binary, Unary, Literal, Grouping } = require('./types')
 const token = Tokenizer.tokenEnum
 
 const parseString = str => {

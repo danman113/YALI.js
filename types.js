@@ -1,19 +1,29 @@
-const Binary = (left, operator, right) => ({
-  left, operator, right
-})
+class Binary {
+  constructor (left, operator, right) {
+    this.left = left
+    this.operator = operator
+    this.right = right
+  }
+}
+class Unary {
+  constructor (operator, right) {
+    this.operator = operator
+    this.right = right
+  }
+}
 
-const Unary = (operator, right) => ({
-  operator, right
-})
-
-const Literal = (value) => ({
-  value
-})
+class Literal {
+  constructor (value) {
+    this.value = value
+  }
+}
 
 // @TODO: Can we express this in a less type-dependant way?
-const Grouping = (expression) => ({
-  expression
-})
+class Grouping {
+  constructor (expression) {
+    this.expression = expression
+  }
+}
 
 module.exports = {
   Binary,
