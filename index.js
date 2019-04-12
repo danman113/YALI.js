@@ -4,16 +4,15 @@ const chalk = require('chalk')
 const readline = require('readline')
 const Tokenizer = require('./tokenizer')
 const Parser = require('./parser')
-console.log(Tokenizer.tokenEnum)
 
 const run = code => {
   try {
     const tokenizer = new Tokenizer(code)
     const tokens = tokenizer.scanTokens()
+    console.log(tokens)
     const parser = new Parser(tokens)
     console.log(parser.expression())
   } catch (e) {
-    console.log(e)
     console.error('Parse Error:', e.toString(), `at ${e.endCoordinates.line}:${e.endCoordinates.col + 1}`)
 
     const lastIndex = code.lastIndexOf('\n', e.startCoordinates.index)

@@ -3,11 +3,6 @@ const token = tokenizer.tokenEnum
 
 const nullable = str => str ? str : ''
 
-
-
-const error = (msg, startCoordinates, endCoordinates) =>
-  new LoxError(msg, startCoordinates, endCoordinates )
-
 class LoxError {
   constructor (msg, startCoordinates, endCoordinates) {
     this.msg = msg
@@ -19,6 +14,9 @@ class LoxError {
     return this.msg
   }
 }
+
+const error = (msg, startCoordinates, endCoordinates) =>
+  new LoxError(msg, startCoordinates, endCoordinates )
 
 const parseError = (msg, token) => {
   if (token.type === token.EOF) {

@@ -1,0 +1,995 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Expression Parsing Parses addition correctly 1`] = `
+Object {
+  "left": Object {
+    "value": 3,
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "lexeme": "+",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 2,
+      "index": 2,
+      "line": 1,
+    },
+    "type": 7,
+  },
+  "right": Object {
+    "value": 1,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses addition correctly 2`] = `
+Object {
+  "left": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 1,
+        "index": 1,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 0,
+        "index": 0,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 2,
+    },
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 4,
+      "line": 1,
+    },
+    "lexeme": "+",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "type": 7,
+  },
+  "right": Object {
+    "value": 2,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses addition correctly 3`] = `
+Object {
+  "left": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 1,
+        "index": 1,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 0,
+        "index": 0,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 3,
+    },
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 4,
+      "line": 1,
+    },
+    "lexeme": "+",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "type": 7,
+  },
+  "right": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 6,
+        "index": 6,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 5,
+        "index": 5,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`Expression Parsing Parses addition correctly 4`] = `
+Object {
+  "left": Object {
+    "value": 3,
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "lexeme": "-",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 2,
+      "index": 2,
+      "line": 1,
+    },
+    "type": 6,
+  },
+  "right": Object {
+    "value": 1,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses addition correctly 5`] = `
+Object {
+  "left": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 1,
+        "index": 1,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 0,
+        "index": 0,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 2,
+    },
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 4,
+      "line": 1,
+    },
+    "lexeme": "-",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "type": 6,
+  },
+  "right": Object {
+    "value": 2,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses addition correctly 6`] = `
+Object {
+  "left": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 1,
+        "index": 1,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 0,
+        "index": 0,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 3,
+    },
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 4,
+      "line": 1,
+    },
+    "lexeme": "-",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "type": 6,
+  },
+  "right": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 6,
+        "index": 6,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 5,
+        "index": 5,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`Expression Parsing Parses comparison correctly 1`] = `
+Object {
+  "left": Object {
+    "value": 3,
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "lexeme": ">",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 2,
+      "index": 2,
+      "line": 1,
+    },
+    "type": 15,
+  },
+  "right": Object {
+    "value": 1,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses comparison correctly 2`] = `
+Object {
+  "left": Object {
+    "value": 2,
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "lexeme": "<",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 2,
+      "index": 2,
+      "line": 1,
+    },
+    "type": 17,
+  },
+  "right": Object {
+    "value": 2,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses comparison correctly 3`] = `
+Object {
+  "left": Object {
+    "value": 3,
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 4,
+      "line": 1,
+    },
+    "lexeme": "<=",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 2,
+      "index": 2,
+      "line": 1,
+    },
+    "type": 18,
+  },
+  "right": Object {
+    "value": 3,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses comparison correctly 4`] = `
+Object {
+  "left": Object {
+    "value": 3,
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 4,
+      "line": 1,
+    },
+    "lexeme": ">=",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 2,
+      "index": 2,
+      "line": 1,
+    },
+    "type": 16,
+  },
+  "right": Object {
+    "value": 1,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses equality correctly 1`] = `
+Object {
+  "left": Object {
+    "value": 3,
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 4,
+      "line": 1,
+    },
+    "lexeme": "==",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 2,
+      "index": 2,
+      "line": 1,
+    },
+    "type": 14,
+  },
+  "right": Object {
+    "value": 3,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses equality correctly 2`] = `
+Object {
+  "left": Object {
+    "value": 3,
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 4,
+      "line": 1,
+    },
+    "lexeme": "!=",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 2,
+      "index": 2,
+      "line": 1,
+    },
+    "type": 12,
+  },
+  "right": Object {
+    "value": 2,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses equality correctly 3`] = `
+Object {
+  "left": Object {
+    "value": 3,
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 4,
+      "line": 1,
+    },
+    "lexeme": "!=",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 2,
+      "index": 2,
+      "line": 1,
+    },
+    "type": 12,
+  },
+  "right": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 6,
+        "index": 6,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 5,
+        "index": 5,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`Expression Parsing Parses equality correctly 4`] = `
+Object {
+  "left": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 1,
+        "index": 1,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 0,
+        "index": 0,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 3,
+    },
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 5,
+      "index": 5,
+      "line": 1,
+    },
+    "lexeme": "!=",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "type": 12,
+  },
+  "right": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 7,
+        "index": 7,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 6,
+        "index": 6,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`Expression Parsing Parses equality correctly 5`] = `
+Object {
+  "left": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 1,
+        "index": 1,
+        "line": 1,
+      },
+      "lexeme": "!",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 0,
+        "index": 0,
+        "line": 1,
+      },
+      "type": 11,
+    },
+    "right": Object {
+      "value": true,
+    },
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 8,
+      "index": 8,
+      "line": 1,
+    },
+    "lexeme": "!=",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 6,
+      "line": 1,
+    },
+    "type": 12,
+  },
+  "right": Object {
+    "value": true,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses equality correctly 6`] = `
+Object {
+  "left": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 1,
+        "index": 1,
+        "line": 1,
+      },
+      "lexeme": "!",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 0,
+        "index": 0,
+        "line": 1,
+      },
+      "type": 11,
+    },
+    "right": Object {
+      "value": true,
+    },
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 8,
+      "index": 8,
+      "line": 1,
+    },
+    "lexeme": "==",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 6,
+      "index": 6,
+      "line": 1,
+    },
+    "type": 14,
+  },
+  "right": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 10,
+        "index": 10,
+        "line": 1,
+      },
+      "lexeme": "!",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 9,
+        "index": 9,
+        "line": 1,
+      },
+      "type": 11,
+    },
+    "right": Object {
+      "value": true,
+    },
+  },
+}
+`;
+
+exports[`Expression Parsing Parses multiplication correctly 1`] = `
+Object {
+  "left": Object {
+    "value": 3,
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "lexeme": "*",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 2,
+      "index": 2,
+      "line": 1,
+    },
+    "type": 10,
+  },
+  "right": Object {
+    "value": 1,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses multiplication correctly 2`] = `
+Object {
+  "left": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 1,
+        "index": 1,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 0,
+        "index": 0,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 2,
+    },
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 4,
+      "line": 1,
+    },
+    "lexeme": "*",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "type": 10,
+  },
+  "right": Object {
+    "value": 2,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses multiplication correctly 3`] = `
+Object {
+  "left": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 1,
+        "index": 1,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 0,
+        "index": 0,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 3,
+    },
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 4,
+      "line": 1,
+    },
+    "lexeme": "*",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "type": 10,
+  },
+  "right": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 6,
+        "index": 6,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 5,
+        "index": 5,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`Expression Parsing Parses multiplication correctly 4`] = `
+Object {
+  "left": Object {
+    "value": 3,
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "lexeme": "/",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 2,
+      "index": 2,
+      "line": 1,
+    },
+    "type": 9,
+  },
+  "right": Object {
+    "value": 1,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses multiplication correctly 5`] = `
+Object {
+  "left": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 1,
+        "index": 1,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 0,
+        "index": 0,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 2,
+    },
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 4,
+      "line": 1,
+    },
+    "lexeme": "/",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "type": 9,
+  },
+  "right": Object {
+    "value": 2,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses multiplication correctly 6`] = `
+Object {
+  "left": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 1,
+        "index": 1,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 0,
+        "index": 0,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 3,
+    },
+  },
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 4,
+      "index": 4,
+      "line": 1,
+    },
+    "lexeme": "/",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 3,
+      "index": 3,
+      "line": 1,
+    },
+    "type": 9,
+  },
+  "right": Object {
+    "operator": Token {
+      "endCoordinates": Coordinate {
+        "col": 6,
+        "index": 6,
+        "line": 1,
+      },
+      "lexeme": "-",
+      "literal": null,
+      "startCoordinates": Coordinate {
+        "col": 5,
+        "index": 5,
+        "line": 1,
+      },
+      "type": 6,
+    },
+    "right": Object {
+      "value": 3,
+    },
+  },
+}
+`;
+
+exports[`Expression Parsing Parses primary characters correctly 1`] = `
+Object {
+  "value": 3,
+}
+`;
+
+exports[`Expression Parsing Parses primary characters correctly 2`] = `
+Object {
+  "value": 321,
+}
+`;
+
+exports[`Expression Parsing Parses primary characters correctly 3`] = `
+Object {
+  "value": 0.3,
+}
+`;
+
+exports[`Expression Parsing Parses primary characters correctly 4`] = `
+Object {
+  "value": 0.321,
+}
+`;
+
+exports[`Expression Parsing Parses primary characters correctly 5`] = `
+Object {
+  "value": 321.123,
+}
+`;
+
+exports[`Expression Parsing Parses primary characters correctly 6`] = `
+Object {
+  "value": "",
+}
+`;
+
+exports[`Expression Parsing Parses primary characters correctly 7`] = `
+Object {
+  "value": "hello",
+}
+`;
+
+exports[`Expression Parsing Parses primary characters correctly 8`] = `
+Object {
+  "value": "
+        <strong>
+          Independent Woman
+        </strong>
+      ",
+}
+`;
+
+exports[`Expression Parsing Parses primary characters correctly 9`] = `
+Object {
+  "value": true,
+}
+`;
+
+exports[`Expression Parsing Parses primary characters correctly 10`] = `
+Object {
+  "value": false,
+}
+`;
+
+exports[`Expression Parsing Parses primary characters correctly 11`] = `
+Object {
+  "value": null,
+}
+`;
+
+exports[`Expression Parsing Parses unaries correctly 1`] = `
+Object {
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 1,
+      "index": 1,
+      "line": 1,
+    },
+    "lexeme": "-",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 0,
+      "index": 0,
+      "line": 1,
+    },
+    "type": 6,
+  },
+  "right": Object {
+    "value": 3,
+  },
+}
+`;
+
+exports[`Expression Parsing Parses unaries correctly 2`] = `
+Object {
+  "operator": Token {
+    "endCoordinates": Coordinate {
+      "col": 1,
+      "index": 1,
+      "line": 1,
+    },
+    "lexeme": "!",
+    "literal": null,
+    "startCoordinates": Coordinate {
+      "col": 0,
+      "index": 0,
+      "line": 1,
+    },
+    "type": 11,
+  },
+  "right": Object {
+    "value": 3,
+  },
+}
+`;

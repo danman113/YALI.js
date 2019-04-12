@@ -25,7 +25,7 @@ class Parser {
   }
 
   equality () {
-    return this.matchBinary('comparison', token.BANG_EQUAL, token.DOUBLE_EQUAL)
+    return this.matchBinary('comparison', token.BANG_EQUAL, token.EQUAL_EQUAL)
   }
 
   comparison () {
