@@ -7,14 +7,20 @@ const Parser = require('./parser')
 const { LoxError } = require('./errors')
 const interpret = require('./interpreter')
 
+let options = {
+  debug: false,
+  history: 30,
+  prompt: '>'
+}
+
 const run = code => {
   try {
     const tokenizer = new Tokenizer(code)
     const tokens = tokenizer.scanTokens()
-    console.log(tokens)
+    if (options.debug) console.log(tokens)
     const parser = new Parser(tokens)
     const expr = parser.expression()
-    console.log(expr)
+    if (options.debug) console.log(expr)
     console.log(JSON.stringify(interpret(expr)))
   } catch (e) {
     if (e instanceof LoxError) {
@@ -32,14 +38,19 @@ const run = code => {
 }
 
 const runPrompt = () => {
-  process.stdout.write('> ')
+  const prompt = options.prompt + ' '
+  process.stdout.write(prompt)
   const lineReader = readline.createInterface({
-    input: process.stdin
+    input: process.stdin,
+    output: process.stdout,
+    terminal: true,
+    prompt: prompt,
+    historySize: +options.history
   })
 
   lineReader.on('line', line => {
     run(line)
-    process.stdout.write('> ')
+    process.stdout.write(prompt)
   })
 }
 
@@ -53,8 +64,25 @@ const readFile = filename => {
   }
 }
 
+const optionRegex = /--(\w+)(?:=(.+))?/
+const processOptions = args =>
+  args.map(arg => {
+    const match = optionRegex.exec(arg)
+    if (match) {
+      const [_, option, value] = match
+      if (!value) {
+        options[option] = !options[option]
+      } else {
+        options[option] = value
+      }
+    } else {
+      return arg
+    }
+  }).filter(Boolean)
+
 const main = argv => {
-  const args = argv.slice(2)
+  const args = processOptions(argv.slice(2))
+  if (options.debug) console.log(options)
   if (args.length > 1) {
     console.error("Usage: jlox [script]")
     return 64
