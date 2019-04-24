@@ -27,5 +27,6 @@ const parseError = (msg, token) => {
 }
 module.exports = {
   error,
+  LoxError,
   parseError
 }
