@@ -25,8 +25,13 @@ const parseError = (msg, token) => {
     return new LoxError(`${nullable(token.lexeme && `at "${token.lexeme}": `)}${msg}`, token.startCoordinates, token.endCoordinates)
   }
 }
+
+const runtimeError = (msg, token) =>
+  new LoxError(`${nullable(token.lexeme && `at "${token.lexeme}": `)}${msg}`, token.startCoordinates, token.endCoordinates)
+
 module.exports = {
   error,
   LoxError,
+  runtimeError,
   parseError
 }

@@ -117,8 +117,32 @@ describe('Interpreter', () => {
         '2 != 2',
       ]
       for (let comp of comparisons) {
-        console.log(comp)
         expect(evaluate(parseExpression(comp))).toBe(eval(comp))
+      }
+    })
+
+    test('catches basic binary type errors', () => {
+      const comparisons = [
+        ['2', '"hello"'],
+        ['false', '"hello"']
+      ]
+      const operators = [
+        '-',
+        '*',
+        '/',
+        '>',
+        '>=',
+        '<',
+        '<='
+      ]
+      for (let operator of operators) {
+        for (let comparison of comparisons) {
+          const [left, right] = comparison
+          const stmt1 = left + operator + right
+          const stmt2 = right + operator + left
+          expect(() => { evaluate(parseExpression(stmt1)) }).toThrow('Operand must be a number!')
+          expect(() => { evaluate(parseExpression(stmt2)) }).toThrow('Operand must be a number!')
+        }
       }
     })
   })
