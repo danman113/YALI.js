@@ -1,5 +1,5 @@
 const tokenizer = require('./tokenizer')
-const { Binary, Unary, Literal, Grouping } = require('./types')
+const { Binary, Unary, Var, Literal, Grouping, PrintStatement, ExpressionStatement, VarStatement } = require('./types')
 const { parseError: ParseError } = require('./errors')
 const token = tokenizer.tokenEnum
 
@@ -13,6 +13,49 @@ class Parser {
     return this.equality()
   }
 
+  parse () {
+    let statements = []
+    while (!this.isAtEnd) {
+      statements.push(this.declaration())
+    }
+
+    return statements
+  }
+
+  declaration () {
+    if (this.match(token.VAR)) return this.varDeclaration()
+
+    return this.statement()
+  }
+
+  varDeclaration () {
+    const name = this.consume(token.IDENTIFIER, 'Expected variable name')
+    let initializer = null
+    if (this.match(token.EQUAL)) {
+      initializer = this.expression()
+    }
+
+    this.consume(token.SEMICOLON, 'Expect ; after value.')
+    return new VarStatement(name, initializer)
+  }
+
+  statement () {
+    if (this.match(token.PRINT)) return this.printStatement()
+
+    return this.expressionStatement()
+  }
+
+  expressionStatement () {
+    const val = this.expression()
+    this.consume(token.SEMICOLON, 'Expect ; after value.')
+    return new ExpressionStatement(val)
+  }
+
+  printStatement () {
+    const val = this.expression()
+    this.consume(token.SEMICOLON, 'Expect ; after value.')
+    return new PrintStatement(val)
+  }
 
   matchBinary (method, ...operators) {
     let expr = this[method]()
@@ -54,6 +97,7 @@ class Parser {
     if (this.match(token.TRUE)) return new Literal(true)
     if (this.match(token.NIL)) return new Literal(null)
     if (this.match(token.NUMBER, token.STRING)) return new Literal(this.previous().literal)
+    if (this.match(token.IDENTIFIER)) return new Var(this.previous())
 
     if (this.match(token.LEFT_PAREN)) {
       const expr = this.expression()

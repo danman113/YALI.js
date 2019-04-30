@@ -1,4 +1,4 @@
-const evaluate = require('./interpreter')
+const Interpreter = require('./interpreter')
 const Tokenizer = require('./tokenizer')
 const Parser = require('./parser')
 
@@ -11,6 +11,11 @@ const parseExpression = code => {
 
 describe('Interpreter', () => {
   describe('Expressions', () => {
+    let interpreter
+
+    beforeEach(() => {
+      interpreter = new Interpreter()
+    })
     test('interprets literals and simple groupings correctly', () => {
       const literalMap = {
         // Numbers
@@ -44,7 +49,8 @@ describe('Interpreter', () => {
       }
       for (let literal in literalMap) {
         const value = literalMap[literal]
-        expect(evaluate(parseExpression(literal))).toBe(value)
+        const interpreter = new Interpreter()
+        expect(interpreter.interpret(parseExpression(literal))).toBe(value)
       }
     })
 
@@ -58,7 +64,7 @@ describe('Interpreter', () => {
       }
       for (let unary in unaryMap) {
         const value = unaryMap[unary]
-        expect(evaluate(parseExpression(unary))).toBe(value)
+        expect(interpreter.interpret(parseExpression(unary))).toBe(value)
       }
     })
 
@@ -97,7 +103,7 @@ describe('Interpreter', () => {
         '(5 - ((3/1) * 23)) + (12 * (2 + 1))',
       ]
       for (let eq of math) {
-        expect(evaluate(parseExpression(eq))).toBe(eval(eq))
+        expect(interpreter.interpret(parseExpression(eq))).toBe(eval(eq))
       }
     })
 
@@ -117,7 +123,7 @@ describe('Interpreter', () => {
         '2 != 2',
       ]
       for (let comp of comparisons) {
-        expect(evaluate(parseExpression(comp))).toBe(eval(comp))
+        expect(interpreter.interpret(parseExpression(comp))).toBe(eval(comp))
       }
     })
 
@@ -140,8 +146,8 @@ describe('Interpreter', () => {
           const [left, right] = comparison
           const stmt1 = left + operator + right
           const stmt2 = right + operator + left
-          expect(() => { evaluate(parseExpression(stmt1)) }).toThrow('Operand must be a number!')
-          expect(() => { evaluate(parseExpression(stmt2)) }).toThrow('Operand must be a number!')
+          expect(() => { interpreter.interpret(parseExpression(stmt1)) }).toThrow('Operand must be a number!')
+          expect(() => { interpreter.interpret(parseExpression(stmt2)) }).toThrow('Operand must be a number!')
         }
       }
     })

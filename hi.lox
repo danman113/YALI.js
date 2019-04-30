@@ -1,0 +1,4 @@
+(23 + 12) + 2;
+var somemath = 3 + (4 * 20);
+print 3 + (4 * 22);
+print somemath;

@@ -18,6 +18,12 @@ class Literal {
   }
 }
 
+class Var {
+  constructor (name) {
+    this.name = name
+  }
+}
+
 // @TODO: Can we express this in a less type-dependant way?
 class Grouping {
   constructor (expression) {
@@ -25,9 +31,23 @@ class Grouping {
   }
 }
 
+class ExpressionStatement extends Grouping {}
+class PrintStatement extends Grouping {}
+
+class VarStatement {
+  constructor (name, initializer) {
+    this.name = name
+    this.initializer = initializer
+  }
+}
+
 module.exports = {
+  Var,
   Binary,
   Unary,
   Literal,
-  Grouping
+  Grouping,
+  ExpressionStatement,
+  PrintStatement,
+  VarStatement
 }

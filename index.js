@@ -5,7 +5,7 @@ const readline = require('readline')
 const Tokenizer = require('./tokenizer')
 const Parser = require('./parser')
 const { LoxError } = require('./errors')
-const interpret = require('./interpreter')
+const Interpreter = require('./interpreter')
 
 let options = {
   debug: false,
@@ -13,23 +13,32 @@ let options = {
   prompt: '>'
 }
 
+const interpreter = new Interpreter()
+
 const run = code => {
   try {
     const tokenizer = new Tokenizer(code)
     const tokens = tokenizer.scanTokens()
     if (options.debug) console.log(tokens)
     const parser = new Parser(tokens)
-    const expr = parser.expression()
-    if (options.debug) console.log(expr)
-    console.log(JSON.stringify(interpret(expr)))
+    const statements = parser.parse()
+    if (options.debug) console.log(statements, null, 2)
+    let lastStatement
+    for (let statement of statements) {
+      lastStatement = interpreter.interpret(statement)
+    }
+    return lastStatement
   } catch (e) {
     if (e instanceof LoxError) {
       console.error('Parse Error:', e.toString(), `at ${e.endCoordinates.line}:${e.endCoordinates.col + 1}`)
-      const lastIndex = code.lastIndexOf('\n', e.startCoordinates.index)
-      const preErrorStart = lastIndex < 0 ? 0 : lastIndex
+      const frontIndex = code.lastIndexOf('\n', e.startCoordinates.index)
+      const preErrorStart = frontIndex < 0 ? 0 : frontIndex
       const preErrorSection = code.substr(preErrorStart, e.startCoordinates.index)
       const errorSection = code.substr(e.startCoordinates.index, e.endCoordinates.index)
-      console.error(preErrorSection + chalk.bgRed(errorSection))
+      const backIndex = code.indexOf('\n', e.endCoordinates.index)
+      const postErrorStart = backIndex < 0 ? code.length : backIndex
+      const postErrorSection = code.substr(e.endCoordinates.index, postErrorStart)
+      console.error(preErrorSection + chalk.bgRed(errorSection) + postErrorSection)
     } else {
       console.log('Unexpected javascript Error: ')
       console.log(e)
@@ -49,7 +58,10 @@ const runPrompt = () => {
   })
 
   lineReader.on('line', line => {
-    run(line)
+    let code = line
+    if (!line.endsWith(';')) code += ';'
+    const lastLine = run(code)
+    console.log(JSON.stringify(lastLine))
     process.stdout.write(prompt)
   })
 }
