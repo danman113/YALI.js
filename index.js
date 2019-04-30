@@ -6,6 +6,7 @@ const Tokenizer = require('./tokenizer')
 const Parser = require('./parser')
 const { LoxError } = require('./errors')
 const Interpreter = require('./interpreter')
+const Environment = require('./environment')
 
 let options = {
   debug: false,
@@ -13,9 +14,7 @@ let options = {
   prompt: '>'
 }
 
-const interpreter = new Interpreter()
-
-const run = code => {
+const run = (code, environment) => {
   try {
     const tokenizer = new Tokenizer(code)
     const tokens = tokenizer.scanTokens()
@@ -23,6 +22,7 @@ const run = code => {
     const parser = new Parser(tokens)
     const statements = parser.parse()
     if (options.debug) console.log(statements, null, 2)
+    const interpreter = new Interpreter(environment)
     let lastStatement
     for (let statement of statements) {
       lastStatement = interpreter.interpret(statement)
@@ -31,13 +31,21 @@ const run = code => {
   } catch (e) {
     if (e instanceof LoxError) {
       console.error('Parse Error:', e.toString(), `at ${e.endCoordinates.line}:${e.endCoordinates.col + 1}`)
+
+      // Pre Error String
       const frontIndex = code.lastIndexOf('\n', e.startCoordinates.index)
       const preErrorStart = frontIndex < 0 ? 0 : frontIndex
       const preErrorSection = code.substr(preErrorStart, e.startCoordinates.index)
+
+      // Error String
       const errorSection = code.substr(e.startCoordinates.index, e.endCoordinates.index)
+
+      // Post Error String
       const backIndex = code.indexOf('\n', e.endCoordinates.index)
       const postErrorStart = backIndex < 0 ? code.length : backIndex
       const postErrorSection = code.substr(e.endCoordinates.index, postErrorStart)
+
+      // Print Critical Code
       console.error(preErrorSection + chalk.bgRed(errorSection) + postErrorSection)
     } else {
       console.log('Unexpected javascript Error: ')
@@ -56,17 +64,18 @@ const runPrompt = () => {
     prompt: prompt,
     historySize: +options.history
   })
+  const env = new Environment()
 
   lineReader.on('line', line => {
     let code = line
     if (!line.endsWith(';')) code += ';'
-    const lastLine = run(code)
+    const lastLine = run(code, env)
     console.log(JSON.stringify(lastLine))
     process.stdout.write(prompt)
   })
 }
 
-const readFile = filename => {
+const runFile = filename => {
   try {
     const file = fs.readFileSync(filename, 'utf8')
     run(file)
@@ -99,7 +108,7 @@ const main = argv => {
     console.error("Usage: jlox [script]")
     return 64
   } else if (args.length === 1) {
-    readFile(args[0])
+    runFile(args[0])
   } else {
     runPrompt()
   }

@@ -21,6 +21,4 @@ class Environment {
   }
 }
 
-module.exports = {
-  Environment
-}
+module.exports = Environment

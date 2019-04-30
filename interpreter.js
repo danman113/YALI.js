@@ -1,6 +1,6 @@
 const { runtimeError } = require('./errors')
 const { Binary, Unary, Literal, Var, Grouping, ExpressionStatement, VarStatement, PrintStatement } = require('./types')
-const { Environment } = require('./environment')
+const Environment = require('./environment')
 const tokenizer = require('./tokenizer')
 const token = tokenizer.tokenEnum
 
@@ -41,7 +41,6 @@ class Interpreter {
     return val
   }
   visitVar (variable) {
-    console.log('var', variable)
     return this.environment.get(variable)
   }
   visitVarStatement (variable) {
