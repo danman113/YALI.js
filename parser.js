@@ -61,7 +61,7 @@ class Parser {
     let expr = this[method]()
     while(this.match(...operators)) {
       const operator = this.previous()
-      const right = this.comparison()
+      const right = this[method]()
       expr = new Binary(expr, operator, right)
     }
     return expr
