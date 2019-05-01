@@ -41,6 +41,13 @@ class VarStatement {
   }
 }
 
+class Assignment {
+  constructor (name, value) {
+    this.name = name
+    this.value = value
+  }
+}
+
 module.exports = {
   Var,
   Binary,
@@ -49,5 +56,6 @@ module.exports = {
   Grouping,
   ExpressionStatement,
   PrintStatement,
-  VarStatement
+  VarStatement,
+  Assignment
 }

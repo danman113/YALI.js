@@ -1,5 +1,5 @@
 const tokenizer = require('./tokenizer')
-const { Binary, Unary, Var, Literal, Grouping, PrintStatement, ExpressionStatement, VarStatement } = require('./types')
+const { Binary, Unary, Var, Literal, Grouping, PrintStatement, ExpressionStatement, VarStatement, Assignment } = require('./types')
 const { parseError: ParseError } = require('./errors')
 const token = tokenizer.tokenEnum
 
@@ -10,7 +10,7 @@ class Parser {
   }
 
   expression () {
-    return this.equality()
+    return this.assignment()
   }
 
   parse () {
@@ -20,6 +20,21 @@ class Parser {
     }
 
     return statements
+  }
+
+  assignment () {
+    const expr = this.equality()
+    if (this.match(token.EQUAL)) {
+      const equalToken = this.previous()
+      const value = this.assignment()
+      if (expr instanceof Var) {
+        const nameToken = expr.name
+        return new Assignment(nameToken, value)
+      }
+      throw ParseError('Expected Expression', equalToken)
+    }
+
+    return expr
   }
 
   declaration () {
@@ -114,6 +129,7 @@ class Parser {
     throw ParseError(err, this.peek())
   }
 
+  // Checks if current token is one of the following tokens and advances to next token
   match (...tokens) {
     for (let token of tokens) {
       if (this.check(token)) {
@@ -125,6 +141,7 @@ class Parser {
     return false
   }
 
+  // Verifies current token is equal to type
   check (type) {
     return !this.isAtEnd && this.peek().type === type
   }
@@ -133,15 +150,18 @@ class Parser {
     return this.peek().type === token.EOF
   }
 
+  // Gets current token
   peek () {
     return this.tokens[this.current]
   }
 
+  // Gets previous token
   previous () {
     if (this.current <= 0) throw ParseError('Expected previous but found nothing', this.peek())
     return this.tokens[this.current - 1]
   }
 
+  // Advances parser to the next token
   advance () {
     if (!this.isAtEnd) this.current++
     return this.previous()

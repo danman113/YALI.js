@@ -21,7 +21,7 @@ const run = (code, environment) => {
     if (options.debug) console.log(tokens)
     const parser = new Parser(tokens)
     const statements = parser.parse()
-    if (options.debug) console.log(statements, null, 2)
+    if (options.debug) console.log(statements)
     const interpreter = new Interpreter(environment)
     let lastStatement
     for (let statement of statements) {

@@ -1,5 +1,5 @@
 const { runtimeError } = require('./errors')
-const { Binary, Unary, Literal, Var, Grouping, ExpressionStatement, VarStatement, PrintStatement } = require('./types')
+const { Binary, Unary, Literal, Var, Grouping, ExpressionStatement, VarStatement, PrintStatement, Assignment } = require('./types')
 const Environment = require('./environment')
 const tokenizer = require('./tokenizer')
 const token = tokenizer.tokenEnum
@@ -25,6 +25,7 @@ class Interpreter {
 
   evaluate (expr) {
     if (expr instanceof PrintStatement) return this.visitPrintStatement(expr)
+    else if (expr instanceof Assignment) return this.visitAssignment(expr)
     else if (expr instanceof VarStatement) return this.visitVarStatement(expr)
     else if (expr instanceof Grouping) return this.visitGrouping(expr)
     else if (expr instanceof Var) return this.visitVar(expr)
@@ -50,6 +51,12 @@ class Interpreter {
     }
     this.environment.set(variable.name, value)
     return null
+  }
+
+  visitAssignment (expr) {
+    const value = this.evaluate(expr.value)
+    this.environment.assign(expr.name, value)
+    return value
   }
 
   visitUnary (expr) {
