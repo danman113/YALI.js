@@ -48,10 +48,18 @@ class Assignment {
   }
 }
 
+class Block {
+  constructor (statements) {
+    this.statements = statements
+  }
+}
+
+
 module.exports = {
   Var,
   Binary,
   Unary,
+  Block,
   Literal,
   Grouping,
   ExpressionStatement,

@@ -69,6 +69,7 @@ const runPrompt = () => {
   lineReader.on('line', line => {
     let code = line
     if (!line.endsWith(';')) code += ';'
+    // TODO: Support multi-line block statements
     const lastLine = run(code, env)
     console.log(JSON.stringify(lastLine))
     process.stdout.write(prompt)

@@ -1,5 +1,5 @@
 const tokenizer = require('./tokenizer')
-const { Binary, Unary, Var, Literal, Grouping, PrintStatement, ExpressionStatement, VarStatement, Assignment } = require('./types')
+const { Binary, Unary, Var, Literal, Grouping, PrintStatement, ExpressionStatement, VarStatement, Assignment, Block } = require('./types')
 const { parseError: ParseError } = require('./errors')
 const token = tokenizer.tokenEnum
 
@@ -56,8 +56,20 @@ class Parser {
 
   statement () {
     if (this.match(token.PRINT)) return this.printStatement()
+    if (this.match(token.LEFT_BRACE)) return new Block(this.block())
 
     return this.expressionStatement()
+  }
+
+
+  block () {
+    let statements = []
+    while (!this.check(token.RIGHT_BRACE) && !this.isAtEnd) {
+      statements.push(this.declaration())
+    }
+
+    this.consume(token.RIGHT_BRACE, 'Missing closing brace. (Expect "}" after block)')
+    return statements
   }
 
   expressionStatement () {

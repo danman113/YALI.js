@@ -9,6 +9,13 @@ const parseExpression = code => {
   return parser.expression()
 }
 
+const parseStatements = code => {
+  const tokenizer = new Tokenizer(code)
+  const tokens = tokenizer.scanTokens()
+  const parser = new Parser(tokens)
+  return parser.parse()
+}
+
 describe('Interpreter', () => {
   describe('Expressions', () => {
     let interpreter
@@ -150,6 +157,38 @@ describe('Interpreter', () => {
           expect(() => { interpreter.interpret(parseExpression(stmt2)) }).toThrow('Operand must be a number!')
         }
       }
+    })
+
+    test('handles variables and lexical scoping', () => {
+      const long = `
+        var a = "global a";
+        var b = "global b";
+        var c = "global c";
+        {
+          var a = "outer a";
+          var b = "outer b";
+          {
+            var a = "inner a";
+            print a;
+            print b;
+            print c;
+          }
+          print a;
+          print b;
+          print c;
+        }
+        print a;
+        print b;
+        print c;
+      `
+
+      const statements = parseStatements(long)
+      const values = []
+      for (let stmt of statements) {
+        values.push(interpreter.interpret(stmt))
+      }
+
+      expect(values).toEqual([ null, null, null, null, 'global a', 'global b', 'global c' ])
     })
   })
 })
