@@ -1,5 +1,5 @@
 const { runtimeError } = require('./errors')
-const { Binary, Unary, Literal, Var, Grouping, Block, ExpressionStatement, VarStatement, PrintStatement, Assignment } = require('./types')
+const { Binary, Unary, Literal, Var, Grouping, Block, ExpressionStatement, VarStatement, PrintStatement, Assignment, Condition } = require('./types')
 const Environment = require('./environment')
 const tokenizer = require('./tokenizer')
 const token = tokenizer.tokenEnum
@@ -26,8 +26,10 @@ class Interpreter {
   evaluate (expr) {
     if (expr instanceof Block) return this.visitBlock(expr)
     else if (expr instanceof Assignment) return this.visitAssignment(expr)
-    else if (expr instanceof PrintStatement) return this.visitPrintStatement(expr)
+    else if (expr instanceof Condition) return this.visitCondition(expr)
     else if (expr instanceof VarStatement) return this.visitVarStatement(expr)
+    else if (expr instanceof PrintStatement) return this.visitPrintStatement(expr)
+    else if (expr instanceof ExpressionStatement) return this.visitGrouping(expr) // Doesn't need it's own, it can just evaluate like grouping
     else if (expr instanceof Grouping) return this.visitGrouping(expr)
     else if (expr instanceof Var) return this.visitVar(expr)
     else if (expr instanceof Literal) return this.visitLiteral(expr)
@@ -39,7 +41,7 @@ class Interpreter {
   visitGrouping (expr) { return this.evaluate(expr.expression) }
   visitPrintStatement (expr) {
     const val = this.evaluate(expr.expression)
-    console.log(val.toString())
+    console.log(!val ? 'nil' : val.toString())
     return val
   }
   visitVar (variable) {
@@ -56,6 +58,15 @@ class Interpreter {
 
   visitBlock (expr) {
     this.interpretBlock(expr.statements, new Environment(this.environment))
+    return null
+  }
+
+  visitCondition (expr) {
+    if (isTruthy(this.evaluate(expr.condition))) {
+      this.evaluate(expr.thenBranch)
+    } else if (expr.elseBranch) {
+      this.evaluate(expr.elseBranch)
+    }
     return null
   }
 

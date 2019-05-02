@@ -54,6 +54,14 @@ class Block {
   }
 }
 
+class Condition {
+  constructor (condition, thenBranch, elseBranch) {
+    this.condition = condition
+    this.thenBranch = thenBranch
+    this.elseBranch = elseBranch
+  }
+}
+
 
 module.exports = {
   Var,
@@ -62,6 +70,7 @@ module.exports = {
   Block,
   Literal,
   Grouping,
+  Condition,
   ExpressionStatement,
   PrintStatement,
   VarStatement,

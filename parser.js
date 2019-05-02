@@ -1,5 +1,5 @@
 const tokenizer = require('./tokenizer')
-const { Binary, Unary, Var, Literal, Grouping, PrintStatement, ExpressionStatement, VarStatement, Assignment, Block } = require('./types')
+const { Binary, Unary, Var, Literal, Grouping, PrintStatement, ExpressionStatement, VarStatement, Assignment, Block, Condition } = require('./types')
 const { parseError: ParseError } = require('./errors')
 const token = tokenizer.tokenEnum
 
@@ -55,10 +55,22 @@ class Parser {
   }
 
   statement () {
+    if (this.match(token.IF)) return this.ifStatement()
     if (this.match(token.PRINT)) return this.printStatement()
     if (this.match(token.LEFT_BRACE)) return new Block(this.block())
 
     return this.expressionStatement()
+  }
+
+  ifStatement () {
+    this.consume(token.LEFT_PAREN, 'Expected "(" after "if"')
+    const cond = this.expression()
+    this.consume(token.RIGHT_PAREN, 'Expected ")" after expression')
+    const ifBranch = this.statement()
+    let elseBranch = null
+    if (this.match(token.ELSE)) elseBranch = this.statement()
+
+    return new Condition(cond, ifBranch, elseBranch)
   }
 
 
