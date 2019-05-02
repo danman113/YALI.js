@@ -5,6 +5,9 @@ class Binary {
     this.right = right
   }
 }
+
+class Logical extends Binary {}
+
 class Unary {
   constructor(operator, right) {
     this.operator = operator
@@ -68,6 +71,7 @@ module.exports = {
   Unary,
   Block,
   Literal,
+  Logical,
   Grouping,
   Condition,
   ExpressionStatement,
