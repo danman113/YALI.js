@@ -16,8 +16,9 @@ const tokens = `
   PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE,
 
   EOF
-`.split(',').map(token => token.trim())
-
+`
+  .split(',')
+  .map(token => token.trim())
 
 let tokenEnum = {}
 tokens.forEach((token, i) => {
@@ -40,26 +41,26 @@ const keywords = {
   this: tokenEnum.THIS,
   true: tokenEnum.TRUE,
   var: tokenEnum.VAR,
-  while: tokenEnum.WHILE,
+  while: tokenEnum.WHILE
 }
 
 const tokenMap = {
-  '(': (tokenizer) => {
+  '(': tokenizer => {
     tokenizer.addToken(tokenEnum.LEFT_PAREN)
   },
-  ')': (tokenizer) => {
+  ')': tokenizer => {
     tokenizer.addToken(tokenEnum.RIGHT_PAREN)
   },
-  '{': (tokenizer) => {
+  '{': tokenizer => {
     tokenizer.addToken(tokenEnum.LEFT_BRACE)
   },
-  '}': (tokenizer) => {
+  '}': tokenizer => {
     tokenizer.addToken(tokenEnum.RIGHT_BRACE)
   },
-  ',': (tokenizer) => {
+  ',': tokenizer => {
     tokenizer.addToken(tokenEnum.COMMA)
   },
-  '.': (tokenizer) => {
+  '.': tokenizer => {
     // Handles leading decimals for number literals
     if (isDigit(tokenizer.peek())) {
       tokenizer.handleNumberLiterals()
@@ -67,45 +68,45 @@ const tokenMap = {
       tokenizer.addToken(tokenEnum.DOT)
     }
   },
-  '-': (tokenizer) => {
+  '-': tokenizer => {
     tokenizer.addToken(tokenEnum.MINUS)
   },
-  '+': (tokenizer) => {
+  '+': tokenizer => {
     tokenizer.addToken(tokenEnum.PLUS)
   },
-  ';': (tokenizer) => {
+  ';': tokenizer => {
     tokenizer.addToken(tokenEnum.SEMICOLON)
   },
-  '/': (tokenizer) => {
+  '/': tokenizer => {
     if (tokenizer.nextMatch('/')) {
       // Eat all those delish comments
-      while(tokenizer.peek() !== '\n' && tokenizer.peek() !== '') tokenizer.chomp()
+      while (tokenizer.peek() !== '\n' && tokenizer.peek() !== '') tokenizer.chomp()
     } else {
       tokenizer.addToken(tokenEnum.SLASH)
     }
   },
-  '*': (tokenizer) => {
+  '*': tokenizer => {
     tokenizer.addToken(tokenEnum.STAR)
   },
-  '!': (tokenizer) => {
+  '!': tokenizer => {
     tokenizer.addToken(tokenizer.nextMatch('=') ? tokenEnum.BANG_EQUAL : tokenEnum.BANG)
   },
-  '=': (tokenizer) => {
+  '=': tokenizer => {
     tokenizer.addToken(tokenizer.nextMatch('=') ? tokenEnum.EQUAL_EQUAL : tokenEnum.EQUAL)
   },
-  '>': (tokenizer) => {
+  '>': tokenizer => {
     tokenizer.addToken(tokenizer.nextMatch('=') ? tokenEnum.GREATER_EQUAL : tokenEnum.GREATER)
   },
-  '<': (tokenizer) => {
+  '<': tokenizer => {
     tokenizer.addToken(tokenizer.nextMatch('=') ? tokenEnum.LESS_EQUAL : tokenEnum.LESS)
   },
   ' ': noop,
   '\t': noop,
   '\r': noop,
-  '\n': (tokenizer) => {
+  '\n': tokenizer => {
     tokenizer.newline()
   },
-  '"': (tokenizer) => {
+  '"': tokenizer => {
     tokenizer.handleStringLiterals()
   }
 }
@@ -115,14 +116,14 @@ const isAlpha = str => /[a-zA-Z_]/.test(str)
 const isAlphaNumeric = str => isAlpha(str) || isDigit(str)
 
 class Tokenizer {
-  static get tokens () {
+  static get tokens() {
     return tokens
   }
 
-  static get tokenEnum () {
+  static get tokenEnum() {
     return tokenEnum
   }
-  constructor (source) {
+  constructor(source) {
     this.source = source
     this.length = source.length
     this.tokens = []
@@ -133,8 +134,8 @@ class Tokenizer {
     this.current = 0
   }
 
-  handleStringLiterals () {
-    while(this.peek() !== '"' && this.peek() !== '') {
+  handleStringLiterals() {
+    while (this.peek() !== '"' && this.peek() !== '') {
       if (this.peek() === '\n') this.newline()
       this.chomp()
     }
@@ -144,9 +145,9 @@ class Tokenizer {
     this.addToken(tokenEnum.STRING, value)
   }
 
-  handleNumberLiterals () {
+  handleNumberLiterals() {
     let hasDecimal = false
-    while(isDigit(this.peek()) || (!hasDecimal && this.peek() === '.')) {
+    while (isDigit(this.peek()) || (!hasDecimal && this.peek() === '.')) {
       if (this.peek() === '.') hasDecimal = true
       this.chomp()
     }
@@ -154,7 +155,7 @@ class Tokenizer {
     this.addToken(tokenEnum.NUMBER, parseFloat(value))
   }
 
-  handleIdentifiers () {
+  handleIdentifiers() {
     while (isAlphaNumeric(this.peek())) this.chomp()
     const value = this.source.substring(this.start, this.current)
     if (keywords[value]) {
@@ -164,7 +165,7 @@ class Tokenizer {
     }
   }
 
-  scanTokens () {
+  scanTokens() {
     while (this.current < this.length) {
       const c = this.chomp()
       this.startPosition = new Coordinate(this.column - 1, this.line, this.current - 1)
@@ -175,7 +176,11 @@ class Tokenizer {
           this.handleIdentifiers()
         } else {
           // Column isn't -1 because we haven't iterated column yet
-          throw Error(`Unexpected character ${c}`, this.startPosition, new Coordinate(this.column, this.line, this.current))
+          throw Error(
+            `Unexpected character ${c}`,
+            this.startPosition,
+            new Coordinate(this.column, this.line, this.current)
+          )
         }
       } else {
         tokenMap[c](this)
@@ -186,44 +191,51 @@ class Tokenizer {
     return this.tokens
   }
 
-  get endPosition () {
+  get endPosition() {
     return new Coordinate(this.column - 1, this.line, this.current)
   }
 
-  addToken (type, literal = null) {
+  addToken(type, literal = null) {
     const text = this.source.substring(this.start, this.current)
-    this.tokens.push(new Token(type, text, literal, new Coordinate(this.column, this.line, this.current), this.startPosition))
+    this.tokens.push(
+      new Token(
+        type,
+        text,
+        literal,
+        new Coordinate(this.column, this.line, this.current),
+        this.startPosition
+      )
+    )
   }
 
-  increment () {
+  increment() {
     this.current++
     this.column++
   }
 
-  newline () {
+  newline() {
     this.line++
     this.column = 0
   }
 
-  chomp () {
+  chomp() {
     this.increment()
     return this.source.charAt(this.current - 1)
   }
 
-  peek () {
+  peek() {
     return this.source.charAt(this.current)
   }
 
-  nextMatch (expected) {
+  nextMatch(expected) {
     if (this.peek() !== expected) return false
     this.increment()
     return true
   }
-
 }
 
 class Coordinate {
-  constructor (col, line, index) {
+  constructor(col, line, index) {
     this.col = col
     this.line = line
     this.index = index
@@ -231,7 +243,7 @@ class Coordinate {
 }
 
 class Token {
-  constructor (type, lexeme, literal, endCoordinates, startCoordinates) {
+  constructor(type, lexeme, literal, endCoordinates, startCoordinates) {
     this.type = type
     this.lexeme = lexeme
     this.literal = literal

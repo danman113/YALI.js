@@ -47,54 +47,28 @@ describe('Expression Parsing', () => {
   })
 
   test('Parses multiplication correctly', () => {
-    const mult = [
-      `3 * 1`,
-      `-2 * 2`,
-      `-3 * -3`,
-      `3 / 1`,
-      `-2 / 2`,
-      `-3 / -3`,
-    ]
+    const mult = [`3 * 1`, `-2 * 2`, `-3 * -3`, `3 / 1`, `-2 / 2`, `-3 / -3`]
     for (const u of mult) {
       expect(parseString(u).expression()).toMatchSnapshot()
     }
   })
 
   test('Parses addition correctly', () => {
-    const add = [
-      `3 + 1`,
-      `-2 + 2`,
-      `-3 + -3`,
-      `3 - 1`,
-      `-2 - 2`,
-      `-3 - -3`,
-    ]
+    const add = [`3 + 1`, `-2 + 2`, `-3 + -3`, `3 - 1`, `-2 - 2`, `-3 - -3`]
     for (const u of add) {
       expect(parseString(u).expression()).toMatchSnapshot()
     }
   })
 
   test('Parses comparison correctly', () => {
-    const comp = [
-      `3 > 1`,
-      `2 < 2`,
-      `3 <= 3`,
-      `3 >= 1`,
-    ]
+    const comp = [`3 > 1`, `2 < 2`, `3 <= 3`, `3 >= 1`]
     for (const u of comp) {
       expect(parseString(u).expression()).toMatchSnapshot()
     }
   })
 
   test('Parses equality correctly', () => {
-    const equals = [
-      `3 == 3`,
-      `3 != 2`,
-      `3 != -3`,
-      `-3 != -3`,
-      `!true != true`,
-      `!true == !true`,
-    ]
+    const equals = [`3 == 3`, `3 != 2`, `3 != -3`, `-3 != -3`, `!true != true`, `!true == !true`]
     for (const u of equals) {
       expect(parseString(u).expression()).toMatchSnapshot()
     }

@@ -1,19 +1,31 @@
 const tokenizer = require('./tokenizer')
-const { Binary, Unary, Var, Literal, Grouping, PrintStatement, ExpressionStatement, VarStatement, Assignment, Block, Condition } = require('./types')
+const {
+  Binary,
+  Unary,
+  Var,
+  Literal,
+  Grouping,
+  PrintStatement,
+  ExpressionStatement,
+  VarStatement,
+  Assignment,
+  Block,
+  Condition
+} = require('./types')
 const { parseError: ParseError } = require('./errors')
 const token = tokenizer.tokenEnum
 
 class Parser {
-  constructor (tokens) {
+  constructor(tokens) {
     this.tokens = tokens
     this.current = 0
   }
 
-  expression () {
+  expression() {
     return this.assignment()
   }
 
-  parse () {
+  parse() {
     let statements = []
     while (!this.isAtEnd) {
       statements.push(this.declaration())
@@ -22,7 +34,7 @@ class Parser {
     return statements
   }
 
-  assignment () {
+  assignment() {
     const expr = this.equality()
     if (this.match(token.EQUAL)) {
       const equalToken = this.previous()
@@ -37,13 +49,13 @@ class Parser {
     return expr
   }
 
-  declaration () {
+  declaration() {
     if (this.match(token.VAR)) return this.varDeclaration()
 
     return this.statement()
   }
 
-  varDeclaration () {
+  varDeclaration() {
     const name = this.consume(token.IDENTIFIER, 'Expected variable name')
     let initializer = null
     if (this.match(token.EQUAL)) {
@@ -54,7 +66,7 @@ class Parser {
     return new VarStatement(name, initializer)
   }
 
-  statement () {
+  statement() {
     if (this.match(token.IF)) return this.ifStatement()
     if (this.match(token.PRINT)) return this.printStatement()
     if (this.match(token.LEFT_BRACE)) return new Block(this.block())
@@ -62,7 +74,7 @@ class Parser {
     return this.expressionStatement()
   }
 
-  ifStatement () {
+  ifStatement() {
     this.consume(token.LEFT_PAREN, 'Expected "(" after "if"')
     const cond = this.expression()
     this.consume(token.RIGHT_PAREN, 'Expected ")" after expression')
@@ -73,8 +85,7 @@ class Parser {
     return new Condition(cond, ifBranch, elseBranch)
   }
 
-
-  block () {
+  block() {
     let statements = []
     while (!this.check(token.RIGHT_BRACE) && !this.isAtEnd) {
       statements.push(this.declaration())
@@ -84,21 +95,21 @@ class Parser {
     return statements
   }
 
-  expressionStatement () {
+  expressionStatement() {
     const val = this.expression()
     this.consume(token.SEMICOLON, 'Expect ; after value.')
     return new ExpressionStatement(val)
   }
 
-  printStatement () {
+  printStatement() {
     const val = this.expression()
     this.consume(token.SEMICOLON, 'Expect ; after value.')
     return new PrintStatement(val)
   }
 
-  matchBinary (method, ...operators) {
+  matchBinary(method, ...operators) {
     let expr = this[method]()
-    while(this.match(...operators)) {
+    while (this.match(...operators)) {
       const operator = this.previous()
       const right = this[method]()
       expr = new Binary(expr, operator, right)
@@ -106,23 +117,29 @@ class Parser {
     return expr
   }
 
-  equality () {
+  equality() {
     return this.matchBinary('comparison', token.BANG_EQUAL, token.EQUAL_EQUAL)
   }
 
-  comparison () {
-    return this.matchBinary('addition', token.GREATER, token.GREATER_EQUAL, token.LESS, token.LESS_EQUAL)
+  comparison() {
+    return this.matchBinary(
+      'addition',
+      token.GREATER,
+      token.GREATER_EQUAL,
+      token.LESS,
+      token.LESS_EQUAL
+    )
   }
 
-  addition () {
+  addition() {
     return this.matchBinary('multiplication', token.MINUS, token.PLUS)
   }
 
-  multiplication () {
+  multiplication() {
     return this.matchBinary('unary', token.SLASH, token.STAR)
   }
 
-  unary () {
+  unary() {
     if (this.match(token.BANG, token.MINUS)) {
       const operator = this.previous()
       const right = this.unary()
@@ -131,7 +148,7 @@ class Parser {
     return this.primary()
   }
 
-  primary () {
+  primary() {
     if (this.match(token.FALSE)) return new Literal(false)
     if (this.match(token.TRUE)) return new Literal(true)
     if (this.match(token.NIL)) return new Literal(null)
@@ -147,14 +164,14 @@ class Parser {
     throw ParseError('Expected Expression', this.peek())
   }
 
-  consume (type, err) {
+  consume(type, err) {
     if (this.check(type)) return this.advance()
 
     throw ParseError(err, this.peek())
   }
 
   // Checks if current token is one of the following tokens and advances to next token
-  match (...tokens) {
+  match(...tokens) {
     for (let token of tokens) {
       if (this.check(token)) {
         this.advance()
@@ -166,27 +183,27 @@ class Parser {
   }
 
   // Verifies current token is equal to type
-  check (type) {
+  check(type) {
     return !this.isAtEnd && this.peek().type === type
   }
 
-  get isAtEnd () {
+  get isAtEnd() {
     return this.peek().type === token.EOF
   }
 
   // Gets current token
-  peek () {
+  peek() {
     return this.tokens[this.current]
   }
 
   // Gets previous token
-  previous () {
+  previous() {
     if (this.current <= 0) throw ParseError('Expected previous but found nothing', this.peek())
     return this.tokens[this.current - 1]
   }
 
   // Advances parser to the next token
-  advance () {
+  advance() {
     if (!this.isAtEnd) this.current++
     return this.previous()
   }

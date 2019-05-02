@@ -28,29 +28,27 @@ describe('Interpreter', () => {
         // Numbers
         '3': 3,
         '321': 321,
-        '.3': .3,
-        '.321': .321,
+        '.3': 0.3,
+        '.321': 0.321,
         '(321.123)': 321.123,
 
         // Strings
         '""': '',
         '"hello"': 'hello',
-        [
-          `"
+        [`"
             <strong>
               Independent Woman
             </strong>
-          "`
-        ]: `
+          "`]: `
             <strong>
               Independent Woman
             </strong>
           `,
         // True
-        'true': true,
+        true: true,
         '(true)': true,
         // False
-        'false': false,
+        false: false,
         // Nil
         '(nil)': null
       }
@@ -107,7 +105,7 @@ describe('Interpreter', () => {
         '21312.312312 / 123.21312',
         // Groupings
         '(5 - (3 - 1)) + -1',
-        '(5 - ((3/1) * 23)) + (12 * (2 + 1))',
+        '(5 - ((3/1) * 23)) + (12 * (2 + 1))'
       ]
       for (let eq of math) {
         expect(interpreter.interpret(parseExpression(eq))).toBe(eval(eq))
@@ -127,7 +125,7 @@ describe('Interpreter', () => {
         '3 == 2',
         '2 == 2',
         '3 != 2',
-        '2 != 2',
+        '2 != 2'
       ]
       for (let comp of comparisons) {
         expect(interpreter.interpret(parseExpression(comp))).toBe(eval(comp))
@@ -135,26 +133,19 @@ describe('Interpreter', () => {
     })
 
     test('catches basic binary type errors', () => {
-      const comparisons = [
-        ['2', '"hello"'],
-        ['false', '"hello"']
-      ]
-      const operators = [
-        '-',
-        '*',
-        '/',
-        '>',
-        '>=',
-        '<',
-        '<='
-      ]
+      const comparisons = [['2', '"hello"'], ['false', '"hello"']]
+      const operators = ['-', '*', '/', '>', '>=', '<', '<=']
       for (let operator of operators) {
         for (let comparison of comparisons) {
           const [left, right] = comparison
           const stmt1 = left + operator + right
           const stmt2 = right + operator + left
-          expect(() => { interpreter.interpret(parseExpression(stmt1)) }).toThrow('Operand must be a number!')
-          expect(() => { interpreter.interpret(parseExpression(stmt2)) }).toThrow('Operand must be a number!')
+          expect(() => {
+            interpreter.interpret(parseExpression(stmt1))
+          }).toThrow('Operand must be a number!')
+          expect(() => {
+            interpreter.interpret(parseExpression(stmt2))
+          }).toThrow('Operand must be a number!')
         }
       }
     })
@@ -188,7 +179,7 @@ describe('Interpreter', () => {
         values.push(interpreter.interpret(stmt))
       }
 
-      expect(values).toEqual([ null, null, null, null, 'global a', 'global b', 'global c' ])
+      expect(values).toEqual([null, null, null, null, 'global a', 'global b', 'global c'])
     })
   })
 })

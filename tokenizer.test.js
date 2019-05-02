@@ -47,17 +47,17 @@ describe('Tokenizer', () => {
   })
 
   test('Handles unfinished strings', () => {
-      let tokenizer = new Tokenizer(`var str = "hello this is an unfinished str-`)
-      expect(() => tokenizer.scanTokens()).toThrow(/Unfinished string/)
+    let tokenizer = new Tokenizer(`var str = "hello this is an unfinished str-`)
+    expect(() => tokenizer.scanTokens()).toThrow(/Unfinished string/)
 
-      tokenizer = new Tokenizer(`var str = "hello this is an finished string"`)
-      expect(() => tokenizer.scanTokens()).not.toThrow(/Unfinished string/)
+    tokenizer = new Tokenizer(`var str = "hello this is an finished string"`)
+    expect(() => tokenizer.scanTokens()).not.toThrow(/Unfinished string/)
 
-      tokenizer = new Tokenizer(`
+    tokenizer = new Tokenizer(`
         var str = "hello this is an finished string"
         "oh god not another unfinished str-
       `)
-      expect(() => tokenizer.scanTokens()).toThrow(/Unfinished string/)
+    expect(() => tokenizer.scanTokens()).toThrow(/Unfinished string/)
   })
 
   test('Handles unexpected characters', () => {
@@ -83,7 +83,9 @@ describe('Tokenizer', () => {
       tokenizer.scanTokens()
     } catch (e) {
       expect(e.toString()).toBe('Unfinished string')
-      expect(singleLine.substr(e.startCoordinates.index, e.endCoordinates.index)).toBe('"would suck if something happened to m-')
+      expect(singleLine.substr(e.startCoordinates.index, e.endCoordinates.index)).toBe(
+        '"would suck if something happened to m-'
+      )
       expect(e.startCoordinates.line).toBe(1)
       expect(e.endCoordinates.line).toBe(1)
     }
@@ -104,10 +106,14 @@ describe('Tokenizer', () => {
   })
 
   test('Returns correct line number when handling unexpected characters', () => {
-    const unexpectedCharacters = ['🐕', 'var a = 🐕', `
+    const unexpectedCharacters = [
+      '🐕',
+      'var a = 🐕',
+      `
       var cat = "cat"
       var dog = 🐕
-    `]
+    `
+    ]
     for (let char of unexpectedCharacters) {
       try {
         let tokenizer = new Tokenizer(char)

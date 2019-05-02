@@ -30,7 +30,11 @@ const run = (code, environment) => {
     return lastStatement
   } catch (e) {
     if (e instanceof LoxError) {
-      console.error('Parse Error:', e.toString(), `at ${e.endCoordinates.line}:${e.endCoordinates.col + 1}`)
+      console.error(
+        'Parse Error:',
+        e.toString(),
+        `at ${e.endCoordinates.line}:${e.endCoordinates.col + 1}`
+      )
 
       // Pre Error String
       const frontIndex = code.lastIndexOf('\n', e.startCoordinates.index)
@@ -88,25 +92,27 @@ const runFile = filename => {
 
 const optionRegex = /--(\w+)(?:=(.+))?/
 const processOptions = args =>
-  args.map(arg => {
-    const match = optionRegex.exec(arg)
-    if (match) {
-      const [_, option, value] = match
-      if (!value) {
-        options[option] = !options[option]
+  args
+    .map(arg => {
+      const match = optionRegex.exec(arg)
+      if (match) {
+        const [_, option, value] = match
+        if (!value) {
+          options[option] = !options[option]
+        } else {
+          options[option] = value
+        }
       } else {
-        options[option] = value
+        return arg
       }
-    } else {
-      return arg
-    }
-  }).filter(Boolean)
+    })
+    .filter(Boolean)
 
 const main = argv => {
   const args = processOptions(argv.slice(2))
   if (options.debug) console.log(options)
   if (args.length > 1) {
-    console.error("Usage: jlox [script]")
+    console.error('Usage: jlox [script]')
     return 64
   } else if (args.length === 1) {
     runFile(args[0])
