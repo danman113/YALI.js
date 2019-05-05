@@ -3,8 +3,10 @@ const {
   Binary,
   Unary,
   Literal,
+  Logical,
   Var,
   Grouping,
+  While,
   Block,
   ExpressionStatement,
   VarStatement,
@@ -38,6 +40,8 @@ class Interpreter {
   evaluate(expr) {
     if (expr instanceof Block) return this.visitBlock(expr)
     else if (expr instanceof Assignment) return this.visitAssignment(expr)
+    else if (expr instanceof Logical) return this.visitLogical(expr)
+    else if (expr instanceof While) return this.visitWhile(expr)
     else if (expr instanceof Condition) return this.visitCondition(expr)
     else if (expr instanceof VarStatement) return this.visitVarStatement(expr)
     else if (expr instanceof PrintStatement) return this.visitPrintStatement(expr)
@@ -61,6 +65,25 @@ class Interpreter {
     console.log(!val ? 'nil' : val.toString())
     return val
   }
+
+  visitLogical(expr) {
+    const left = this.evaluate(expr.left)
+    if (expr.operator.type === token.OR) {
+      if (isTruthy(left)) return left
+    } else {
+      if (!isTruthy(left)) return left
+    }
+
+    return this.evaluate(expr.right)
+  }
+
+  visitWhile(expr) {
+    while (isTruthy(this.evaluate(expr.condition))) {
+      this.evaluate(expr.body)
+    }
+    return null
+  }
+
   visitVar(variable) {
     return this.environment.get(variable)
   }

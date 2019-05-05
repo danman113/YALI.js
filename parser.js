@@ -4,11 +4,13 @@ const {
   Unary,
   Var,
   Literal,
+  While,
   Grouping,
   PrintStatement,
   ExpressionStatement,
   VarStatement,
   Assignment,
+  Logical,
   Block,
   Condition
 } = require('./types')
@@ -35,7 +37,7 @@ class Parser {
   }
 
   assignment() {
-    const expr = this.equality()
+    const expr = this.or()
     if (this.match(token.EQUAL)) {
       const equalToken = this.previous()
       const value = this.assignment()
@@ -47,6 +49,14 @@ class Parser {
     }
 
     return expr
+  }
+
+  or() {
+    return this.matchBinary('and', Logical, token.OR)
+  }
+
+  and() {
+    return this.matchBinary('equality', Logical, token.AND)
   }
 
   declaration() {
@@ -68,10 +78,20 @@ class Parser {
 
   statement() {
     if (this.match(token.IF)) return this.ifStatement()
+    if (this.match(token.WHILE)) return this.whileStatement()
     if (this.match(token.PRINT)) return this.printStatement()
     if (this.match(token.LEFT_BRACE)) return new Block(this.block())
 
     return this.expressionStatement()
+  }
+
+  whileStatement() {
+    this.consume(token.LEFT_PAREN, 'Expected "(" after "while"')
+    const cond = this.expression()
+    this.consume(token.RIGHT_PAREN, 'Expected ")" after expression')
+    const body = this.statement()
+
+    return new While(cond, body)
   }
 
   ifStatement() {
@@ -107,23 +127,24 @@ class Parser {
     return new PrintStatement(val)
   }
 
-  matchBinary(method, ...operators) {
+  matchBinary(method, Class, ...operators) {
     let expr = this[method]()
     while (this.match(...operators)) {
       const operator = this.previous()
       const right = this[method]()
-      expr = new Binary(expr, operator, right)
+      expr = new Class(expr, operator, right)
     }
     return expr
   }
 
   equality() {
-    return this.matchBinary('comparison', token.BANG_EQUAL, token.EQUAL_EQUAL)
+    return this.matchBinary('comparison', Binary, token.BANG_EQUAL, token.EQUAL_EQUAL)
   }
 
   comparison() {
     return this.matchBinary(
       'addition',
+      Binary,
       token.GREATER,
       token.GREATER_EQUAL,
       token.LESS,
@@ -132,11 +153,11 @@ class Parser {
   }
 
   addition() {
-    return this.matchBinary('multiplication', token.MINUS, token.PLUS)
+    return this.matchBinary('multiplication', Binary, token.MINUS, token.PLUS)
   }
 
   multiplication() {
-    return this.matchBinary('unary', token.SLASH, token.STAR)
+    return this.matchBinary('unary', Binary, token.SLASH, token.STAR)
   }
 
   unary() {

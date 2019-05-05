@@ -65,11 +65,19 @@ class Condition {
   }
 }
 
+class While {
+  constructor(condition, body) {
+    this.condition = condition
+    this.body = body
+  }
+}
+
 module.exports = {
   Var,
   Binary,
   Unary,
   Block,
+  While,
   Literal,
   Logical,
   Grouping,
