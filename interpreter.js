@@ -62,7 +62,7 @@ class Interpreter {
   }
   visitPrintStatement(expr) {
     const val = this.evaluate(expr.expression)
-    console.log(!val ? 'nil' : val.toString())
+    console.log(val === null ? 'nil' : val.toString())
     return val
   }
 
