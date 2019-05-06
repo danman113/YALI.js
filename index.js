@@ -44,6 +44,7 @@ const run = (code, environment) => {
       // Error String
       const errorSection = code.substr(e.startCoordinates.index, e.endCoordinates.index)
 
+      // @TODO: Fix this
       // Post Error String
       const backIndex = code.indexOf('\n', e.endCoordinates.index)
       const postErrorStart = backIndex < 0 ? code.length : backIndex
@@ -69,6 +70,7 @@ const runPrompt = () => {
     historySize: +options.history
   })
   const env = new Environment()
+  env.setBuiltin('readFile', (_vars, args) => fs.readFileSync(args[0], 'utf8'))
 
   lineReader.on('line', line => {
     let code = line
@@ -109,6 +111,7 @@ const processOptions = args =>
     .filter(Boolean)
 
 const main = argv => {
+  process.title = 'YALI'
   const args = processOptions(argv.slice(2))
   if (options.debug) console.log(options)
   if (args.length > 1) {

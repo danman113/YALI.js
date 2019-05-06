@@ -3,6 +3,7 @@ const {
   Binary,
   Unary,
   Var,
+  Call,
   Literal,
   While,
   Grouping,
@@ -75,7 +76,6 @@ class Parser {
     return this.matchBinary('equality', Logical, token.AND)
   }
 
-
   varDeclaration() {
     const name = this.consume(token.IDENTIFIER, 'Expected variable name')
     let initializer = null
@@ -87,8 +87,7 @@ class Parser {
     return new VarStatement(name, initializer)
   }
 
-
-  forStatement () {
+  forStatement() {
     this.consume(token.LEFT_PAREN, 'Expected "(" after "for"')
 
     let init
@@ -204,7 +203,31 @@ class Parser {
       const right = this.unary()
       return new Unary(operator, right)
     }
-    return this.primary()
+    return this.call()
+  }
+
+  call() {
+    let expr = this.primary()
+    while (true) {
+      if (this.match(token.LEFT_PAREN)) {
+        expr = this.finishCall(expr)
+      } else {
+        break
+      }
+    }
+
+    return expr
+  }
+
+  finishCall(callee) {
+    let args = []
+    if (!this.check(token.RIGHT_PAREN)) {
+      do {
+        args.push(this.expression())
+      } while (this.match(token.COMMA))
+    }
+    const paren = this.consume(token.RIGHT_PAREN, 'Unfinished argument list')
+    return new Call(callee, paren, args)
   }
 
   primary() {

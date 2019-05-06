@@ -22,6 +22,10 @@ class Environment {
     return this.map.set(token.lexeme, value)
   }
 
+  setBuiltin(name, func) {
+    this.map.set(name, typeof func === 'function' ? { call: func } : func)
+  }
+
   assign(token, value) {
     if (!this.map.has(token.lexeme)) {
       if (this.enclosing) return this.enclosing.assign(token, value)

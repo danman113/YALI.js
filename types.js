@@ -27,7 +27,6 @@ class Var {
   }
 }
 
-// @TODO: Can we express this in a less type-dependant way?
 class Grouping {
   constructor(expression) {
     this.expression = expression
@@ -72,11 +71,31 @@ class While {
   }
 }
 
+class Call {
+  constructor(callee, paren, args) {
+    ;(this.callee = callee), (this.paren = paren)
+    this.arguments = args
+  }
+}
+
+class Callable {
+  constructor(name, func) {
+    this.lexeme = name
+    this.call = func
+  }
+
+  toString() {
+    return '<native fn>'
+  }
+}
+
 module.exports = {
   Var,
   Binary,
   Unary,
   Block,
+  Call,
+  Callable,
   While,
   Literal,
   Logical,

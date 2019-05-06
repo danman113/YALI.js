@@ -2,6 +2,7 @@ const { runtimeError } = require('./errors')
 const {
   Binary,
   Unary,
+  Call,
   Literal,
   Logical,
   Var,
@@ -31,6 +32,12 @@ const checkNumber = (token, ...operands) => {
 class Interpreter {
   constructor(environment) {
     this.environment = environment || new Environment()
+    this.environment.setBuiltin('PI', Math.PI)
+    this.environment.setBuiltin('cos', (_vars, args) => Math.cos(args[0]))
+    this.environment.setBuiltin('mod', (_vars, args) => args[0] % args[1])
+    this.environment.setBuiltin('strlen', (_vars, args) => args[0].length)
+    this.environment.setBuiltin('charAt', (_vars, args) => args[0][args[1]])
+    this.environment.setBuiltin('clock', () => new Date().getTime())
   }
 
   interpret(expr) {
@@ -41,6 +48,7 @@ class Interpreter {
     if (expr instanceof Block) return this.visitBlock(expr)
     else if (expr instanceof Assignment) return this.visitAssignment(expr)
     else if (expr instanceof Logical) return this.visitLogical(expr)
+    else if (expr instanceof Call) return this.visitCall(expr)
     else if (expr instanceof While) return this.visitWhile(expr)
     else if (expr instanceof Condition) return this.visitCondition(expr)
     else if (expr instanceof VarStatement) return this.visitVarStatement(expr)
@@ -128,6 +136,18 @@ class Interpreter {
     const value = this.evaluate(expr.value)
     this.environment.assign(expr.name, value)
     return value
+  }
+
+  visitCall(expr) {
+    const callee = this.evaluate(expr.callee)
+
+    let args = expr.arguments.map(arg => this.evaluate(arg))
+
+    if (!callee.call) {
+      throw runtimeError('Can only call functions and classes', expr.paren)
+    }
+
+    return callee.call(this, args)
   }
 
   visitUnary(expr) {
