@@ -1,9 +1,9 @@
 {
   "name": "yali",
-  "version": "1.0.0",
+  "version": "0.10.2",
   "description": "Yet Another Lox Interpreter. Javascript Implementation of the Lox Programming Language",
   "main": "index.js",
-  "bin": "./index.js",
+  "bin": "./cli.js",
   "scripts": {
     "test": "jest",
     "format": "prettier --write **/*.js",
