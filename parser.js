@@ -36,6 +36,22 @@ class Parser {
     return statements
   }
 
+  declaration() {
+    if (this.match(token.VAR)) return this.varDeclaration()
+
+    return this.statement()
+  }
+
+  statement() {
+    if (this.match(token.IF)) return this.ifStatement()
+    if (this.match(token.FOR)) return this.forStatement()
+    if (this.match(token.WHILE)) return this.whileStatement()
+    if (this.match(token.PRINT)) return this.printStatement()
+    if (this.match(token.LEFT_BRACE)) return new Block(this.block())
+
+    return this.expressionStatement()
+  }
+
   assignment() {
     const expr = this.or()
     if (this.match(token.EQUAL)) {
@@ -59,11 +75,6 @@ class Parser {
     return this.matchBinary('equality', Logical, token.AND)
   }
 
-  declaration() {
-    if (this.match(token.VAR)) return this.varDeclaration()
-
-    return this.statement()
-  }
 
   varDeclaration() {
     const name = this.consume(token.IDENTIFIER, 'Expected variable name')
@@ -76,13 +87,40 @@ class Parser {
     return new VarStatement(name, initializer)
   }
 
-  statement() {
-    if (this.match(token.IF)) return this.ifStatement()
-    if (this.match(token.WHILE)) return this.whileStatement()
-    if (this.match(token.PRINT)) return this.printStatement()
-    if (this.match(token.LEFT_BRACE)) return new Block(this.block())
 
-    return this.expressionStatement()
+  forStatement () {
+    this.consume(token.LEFT_PAREN, 'Expected "(" after "for"')
+
+    let init
+    if (this.match(token.SEMICOLON)) {
+      init = null
+    } else if (this.match(token.VAR)) {
+      init = this.varDeclaration()
+    } else {
+      init = this.expressionStatement()
+    }
+
+    let cond = null
+    if (!this.check(token.SEMICOLON)) {
+      cond = this.expression()
+    }
+    this.consume(token.SEMICOLON, 'Expected ";" after loop condition')
+
+    let inc = null
+    if (!this.check(token.RIGHT_PAREN)) {
+      inc = this.expression()
+    }
+    this.consume(token.RIGHT_PAREN, 'Expected ")" after for clause')
+    let body = this.statement()
+
+    if (inc) {
+      body = new Block([body, new ExpressionStatement(inc)])
+    }
+    if (!cond) cond = new Literal(true)
+    body = new While(cond, body)
+    if (init) body = new Block([init, body])
+
+    return body
   }
 
   whileStatement() {
