@@ -9,6 +9,7 @@ const {
   Grouping,
   While,
   Block,
+  LoxFunction,
   ExpressionStatement,
   VarStatement,
   PrintStatement,
@@ -29,6 +30,21 @@ const checkNumber = (token, ...operands) => {
   }
 }
 
+class LoxCallable {
+  constructor(declaration) {
+    this.declaration = declaration
+  }
+
+  call (interpreter, args) {
+    const env = new Environment(interpreter.environment)
+    for (let param = 0; param < this.declaration.params.length; param++) {
+      env.set(this.declaration.params[param], args[param])
+    }
+    interpreter.interpretBlock(this.declaration.bodyStatements, env)
+    return null
+  }
+}
+
 class Interpreter {
   constructor(environment) {
     this.environment = environment || new Environment()
@@ -46,6 +62,7 @@ class Interpreter {
 
   evaluate(expr) {
     if (expr instanceof Block) return this.visitBlock(expr)
+    else if (expr instanceof LoxFunction) return this.visitFunction(expr)
     else if (expr instanceof Assignment) return this.visitAssignment(expr)
     else if (expr instanceof Logical) return this.visitLogical(expr)
     else if (expr instanceof Call) return this.visitCall(expr)
@@ -72,6 +89,11 @@ class Interpreter {
     const val = this.evaluate(expr.expression)
     console.log(val === null ? 'nil' : val.toString())
     return val
+  }
+
+  visitFunction (expr) {
+    const fn = new LoxCallable(expr)
+    this.environment.set(expr.name, fn)
   }
 
   visitLogical(expr) {

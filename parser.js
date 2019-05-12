@@ -7,6 +7,7 @@ const {
   Literal,
   While,
   Grouping,
+  LoxFunction,
   PrintStatement,
   ExpressionStatement,
   VarStatement,
@@ -17,6 +18,8 @@ const {
 } = require('./types')
 const { parseError: ParseError } = require('./errors')
 const token = tokenizer.tokenEnum
+
+const FUNCTION_TYPE = 'function'
 
 class Parser {
   constructor(tokens) {
@@ -38,9 +41,38 @@ class Parser {
   }
 
   declaration() {
+    if (this.match(token.FUN)) return this.fun(FUNCTION_TYPE)
     if (this.match(token.VAR)) return this.varDeclaration()
 
     return this.statement()
+  }
+
+  fun (type) {
+    const name = this.consume(token.IDENTIFIER, `Expected ${type} name`)
+
+    const params = []
+    this.consume(token.LEFT_PAREN, `Expected paren after ${type} name`)
+    if (!this.check(token.RIGHT_PAREN)) {
+      do {
+        params.push(this.consume(token.IDENTIFIER, 'Expected identifier'))
+      } while (this.match(token.COMMA))
+    }
+    this.consume(token.RIGHT_PAREN, 'Expected paren after arguments')
+    this.consume(token.LEFT_BRACE, 'Expected left brace after argument list')
+    const body = this.block()
+    return new LoxFunction(name, params, body)
+  }
+
+
+  varDeclaration() {
+    const name = this.consume(token.IDENTIFIER, 'Expected variable name')
+    let initializer = null
+    if (this.match(token.EQUAL)) {
+      initializer = this.expression()
+    }
+
+    this.consume(token.SEMICOLON, 'Expect ; after value.')
+    return new VarStatement(name, initializer)
   }
 
   statement() {
@@ -74,17 +106,6 @@ class Parser {
 
   and() {
     return this.matchBinary('equality', Logical, token.AND)
-  }
-
-  varDeclaration() {
-    const name = this.consume(token.IDENTIFIER, 'Expected variable name')
-    let initializer = null
-    if (this.match(token.EQUAL)) {
-      initializer = this.expression()
-    }
-
-    this.consume(token.SEMICOLON, 'Expect ; after value.')
-    return new VarStatement(name, initializer)
   }
 
   forStatement() {

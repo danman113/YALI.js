@@ -89,6 +89,14 @@ class Callable {
   }
 }
 
+class LoxFunction {
+  constructor (name, params, bodyStatements) {
+    this.name = name
+    this.params = params
+    this.bodyStatements = bodyStatements
+  }
+}
+
 module.exports = {
   Var,
   Binary,
@@ -99,6 +107,7 @@ module.exports = {
   While,
   Literal,
   Logical,
+  LoxFunction,
   Grouping,
   Condition,
   ExpressionStatement,

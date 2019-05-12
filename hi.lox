@@ -1,0 +1,21 @@
+
+var thing = 3;
+fun hello () {
+  var thing = "hello";
+  fun bax () {
+    var bux = 2;
+    print bux;
+  }
+  print thing;
+  bax();
+}
+
+hello();
+
+print thing;
+
+fun sayHi(first, last) {
+  print "Hi, " + first + " " + last + "!";
+}
+
+sayHi("Dear", "Reader");

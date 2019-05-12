@@ -20,6 +20,7 @@ const run = (code, environment, debug = false) => {
     }
     return lastStatement
   } catch (e) {
+    console.log(e)
     if (e instanceof LoxError) {
       console.error(
         'Parse Error:',
