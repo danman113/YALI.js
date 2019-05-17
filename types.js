@@ -89,6 +89,13 @@ class Callable {
   }
 }
 
+class Return {
+  constructor(keyword, value) {
+    this.keyword = keyword
+    this.value = value
+  }
+}
+
 class LoxFunction {
   constructor (name, params, bodyStatements) {
     this.name = name
@@ -106,6 +113,7 @@ module.exports = {
   Callable,
   While,
   Literal,
+  Return,
   Logical,
   LoxFunction,
   Grouping,

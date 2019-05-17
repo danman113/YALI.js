@@ -1,4 +1,4 @@
-const { runtimeError } = require('./errors')
+const { runtimeError, ReturnError } = require('./errors')
 const {
   Binary,
   Unary,
@@ -7,6 +7,7 @@ const {
   Logical,
   Var,
   Grouping,
+  Return,
   While,
   Block,
   LoxFunction,
@@ -40,7 +41,15 @@ class LoxCallable {
     for (let param = 0; param < this.declaration.params.length; param++) {
       env.set(this.declaration.params[param], args[param])
     }
-    interpreter.interpretBlock(this.declaration.bodyStatements, env)
+    try {
+      interpreter.interpretBlock(this.declaration.bodyStatements, env)
+    } catch (ret) {
+      if (ret instanceof ReturnError) {
+        return ret.value
+      } else {
+        throw ret
+      }
+    }
     return null
   }
 }
@@ -70,6 +79,7 @@ class Interpreter {
     else if (expr instanceof Condition) return this.visitCondition(expr)
     else if (expr instanceof VarStatement) return this.visitVarStatement(expr)
     else if (expr instanceof PrintStatement) return this.visitPrintStatement(expr)
+    else if (expr instanceof Return) return this.visitReturnStatement(expr)
     // Doesn't need it's own, it can just evaluate like grouping
     else if (expr instanceof ExpressionStatement) return this.visitGrouping(expr)
     else if (expr instanceof Grouping) return this.visitGrouping(expr)
@@ -114,9 +124,17 @@ class Interpreter {
     return null
   }
 
+  visitReturnStatement(stmt) {
+    var val = null
+    if (stmt.value) val = this.evaluate(stmt.value)
+
+    throw new ReturnError(val)
+  }
+
   visitVar(variable) {
     return this.environment.get(variable)
   }
+
   visitVarStatement(variable) {
     let value = null
     if (variable.initializer !== null) {

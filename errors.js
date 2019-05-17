@@ -15,6 +15,12 @@ class LoxError {
   }
 }
 
+class ReturnError {
+  constructor (val) {
+    this.value = val
+  }
+}
+
 const error = (msg, startCoordinates, endCoordinates) =>
   new LoxError(msg, startCoordinates, endCoordinates)
 
@@ -40,6 +46,7 @@ const runtimeError = (msg, token) =>
 module.exports = {
   error,
   LoxError,
+  ReturnError,
   runtimeError,
   parseError
 }

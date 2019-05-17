@@ -7,6 +7,7 @@ const {
   Literal,
   While,
   Grouping,
+  Return,
   LoxFunction,
   PrintStatement,
   ExpressionStatement,
@@ -79,10 +80,21 @@ class Parser {
     if (this.match(token.IF)) return this.ifStatement()
     if (this.match(token.FOR)) return this.forStatement()
     if (this.match(token.WHILE)) return this.whileStatement()
+    if (this.match(token.RETURN)) return this.returnStatement()
     if (this.match(token.PRINT)) return this.printStatement()
     if (this.match(token.LEFT_BRACE)) return new Block(this.block())
 
     return this.expressionStatement()
+  }
+
+  returnStatement () {
+    const prev = this.previous()
+    let value = null
+    if (!this.check(token.SEMICOLON)) {
+      value = this.expression()
+    }
+    this.consume(token.SEMICOLON, 'Expected ";" after return value')
+    return new Return(prev, value)
   }
 
   assignment() {
