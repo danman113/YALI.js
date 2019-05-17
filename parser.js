@@ -48,7 +48,7 @@ class Parser {
     return this.statement()
   }
 
-  fun (type) {
+  fun(type) {
     const name = this.consume(token.IDENTIFIER, `Expected ${type} name`)
 
     const params = []
@@ -63,7 +63,6 @@ class Parser {
     const body = this.block()
     return new LoxFunction(name, params, body)
   }
-
 
   varDeclaration() {
     const name = this.consume(token.IDENTIFIER, 'Expected variable name')
@@ -87,7 +86,7 @@ class Parser {
     return this.expressionStatement()
   }
 
-  returnStatement () {
+  returnStatement() {
     const prev = this.previous()
     let value = null
     if (!this.check(token.SEMICOLON)) {

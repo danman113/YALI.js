@@ -16,7 +16,7 @@ class LoxError {
 }
 
 class ReturnError {
-  constructor (val) {
+  constructor(val) {
     this.value = val
   }
 }

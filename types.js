@@ -97,7 +97,7 @@ class Return {
 }
 
 class LoxFunction {
-  constructor (name, params, bodyStatements) {
+  constructor(name, params, bodyStatements) {
     this.name = name
     this.params = params
     this.bodyStatements = bodyStatements

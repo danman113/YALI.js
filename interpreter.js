@@ -32,12 +32,13 @@ const checkNumber = (token, ...operands) => {
 }
 
 class LoxCallable {
-  constructor(declaration) {
+  constructor(declaration, closure) {
     this.declaration = declaration
+    this.closure = closure
   }
 
-  call (interpreter, args) {
-    const env = new Environment(interpreter.environment)
+  call(interpreter, args) {
+    const env = new Environment(this.closure)
     for (let param = 0; param < this.declaration.params.length; param++) {
       env.set(this.declaration.params[param], args[param])
     }
@@ -101,8 +102,8 @@ class Interpreter {
     return val
   }
 
-  visitFunction (expr) {
-    const fn = new LoxCallable(expr)
+  visitFunction(expr) {
+    const fn = new LoxCallable(expr, this.environment)
     this.environment.set(expr.name, fn)
   }
 
