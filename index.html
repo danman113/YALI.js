@@ -10,6 +10,24 @@
     textarea {
       height: 250px;
     }
+    .code-area {
+      display: flex;
+      flex-wrap: wrap-reverse;
+    }
+
+    .col {
+      width: 100%;
+    }
+
+    @media all and (min-width: 600px) {
+      .code-area {
+        flex-wrap: initial;
+      }
+
+      .col:first-child {
+        margin-right: 1em;
+      }
+    }
   </style>
 </head>
 <body>
@@ -21,8 +39,15 @@
     <label for="exampleProgram">Example Program:</label>
     <select name="exampleProgram" id="exampleProgram"></select>
   </div>
-  <div>
-    <textarea id="code" cols="50" rows="15"></textarea>
+  <div class="code-area">
+    <div class="col">
+      <label for="code">Code: </label>
+      <textarea id="code" cols="50" rows="15"></textarea>
+    </div>
+    <div class="col">
+      <label for="output">Output: </label>
+      <textarea id="output" cols="50" rows="15" readonly></textarea>
+    </div>
   </div>
   <div>
     <button id="run">

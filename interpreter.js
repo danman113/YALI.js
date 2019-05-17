@@ -56,7 +56,8 @@ class LoxCallable {
 }
 
 class Interpreter {
-  constructor(environment) {
+  constructor(environment, printfunc = console.log) {
+    this.printfunction = printfunc
     this.environment = environment || new Environment()
     this.environment.setBuiltin('PI', Math.PI)
     this.environment.setBuiltin('cos', (_vars, args) => Math.cos(args[0]))
@@ -98,7 +99,7 @@ class Interpreter {
   }
   visitPrintStatement(expr) {
     const val = this.evaluate(expr.expression)
-    console.log(val === null ? 'nil' : val.toString())
+    this.printfunction(val === null ? 'nil' : val.toString())
     return val
   }
 

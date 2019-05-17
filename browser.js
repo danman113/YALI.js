@@ -1,8 +1,11 @@
 import { run, Environment } from './index'
 import { readFileSync } from 'fs'
 
+let output = ''
+
 const code = document.getElementById('code')
 
+// Process Example Programs
 const exampleProgramSource = [
   readFileSync(__dirname + '/examples/interactiveFibonacci.lox', 'utf-8'),
   readFileSync(__dirname + '/examples/closureLinkedList.lox', 'utf-8')
@@ -18,6 +21,7 @@ const examplePrograms = exampleProgramSource.map(program => {
   }
 })
 
+// Handle Example Program Dropdown
 const exampleProgram = document.getElementById('exampleProgram')
 const programHTML = examplePrograms
   .map((program, i) => `<option value="${i}">${program.name}</option>`)
@@ -29,6 +33,13 @@ exampleProgram.onchange = e => {
 }
 code.value = examplePrograms[0].program
 
+// Handle running the code
+const handleOutput = txt => {
+  output += txt + '\n'
+  console.log(txt)
+  document.getElementById('output').value = output
+}
+
 const button = document.getElementById('run')
 button.onclick = () => {
   const source = code.value
@@ -36,5 +47,6 @@ button.onclick = () => {
   browserEnv.setBuiltin('alert', (_, arg) => alert(arg[0]))
   browserEnv.setBuiltin('confirm', (_, elem) => confirm(elem[0]))
   browserEnv.setBuiltin('prompt', (_, p) => prompt(p[0], p.length > 1 ? p[1] : null))
-  run(source, browserEnv)
+  output = ''
+  run(source, browserEnv, handleOutput)
 }

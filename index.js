@@ -5,7 +5,7 @@ const { LoxError } = require('./errors')
 const Interpreter = require('./interpreter')
 const Environment = require('./environment')
 
-const run = (code, environment, debug = false) => {
+const run = (code, environment, printfn, debug = false) => {
   try {
     const tokenizer = new Tokenizer(code)
     const tokens = tokenizer.scanTokens()
@@ -13,7 +13,7 @@ const run = (code, environment, debug = false) => {
     const parser = new Parser(tokens)
     const statements = parser.parse()
     if (debug) console.log(statements)
-    const interpreter = new Interpreter(environment)
+    const interpreter = new Interpreter(environment, printfn)
     let lastStatement
     for (let statement of statements) {
       lastStatement = interpreter.interpret(statement)
