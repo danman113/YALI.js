@@ -31,7 +31,11 @@ exampleProgram.onchange = e => {
   const selectedProgram = e.target.value
   code.value = examplePrograms[selectedProgram].program
 }
-code.value = examplePrograms[0].program
+let defaultProgram = 0
+if (window.location.hash) {
+  defaultProgram = +(window.location.hash.replace(/[^\w\s]/gi, '').trim())
+}
+code.value = examplePrograms[defaultProgram].program
 
 // Handle running the code
 const handleOutput = txt => {
