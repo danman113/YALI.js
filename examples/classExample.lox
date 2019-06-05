@@ -1,0 +1,24 @@
+class Lox {
+  breakfast() {
+    print "Toast";
+  }
+}
+
+fun hello () {
+  print "Would you like some breakfast?";
+}
+
+print Lox;
+
+print hello;
+var loxInstance = Lox();
+
+loxInstance.category = "Breakfast";
+print loxInstance.category;
+
+print Lox();
+
+// class Bagel {}
+// var bagel = Bagel();
+// print bagel; // Prints "Bagel instance".
+// print bagel.lox;

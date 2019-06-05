@@ -27,6 +27,21 @@ class Var {
   }
 }
 
+class Get {
+  constructor(object, name) {
+    this.object = object
+    this.name = name
+  }
+}
+
+class Set {
+  constructor(object, name, value) {
+    this.object = object
+    this.name = name
+    this.value = value
+  }
+}
+
 class Grouping {
   constructor(expression) {
     this.expression = expression
@@ -73,11 +88,13 @@ class While {
 
 class Call {
   constructor(callee, paren, args) {
-    ;(this.callee = callee), (this.paren = paren)
+    this.callee = callee
+    this.paren = paren
     this.arguments = args
   }
 }
 
+// Runtime Classes
 class Callable {
   constructor(name, func) {
     this.lexeme = name
@@ -93,6 +110,13 @@ class Return {
   constructor(keyword, value) {
     this.keyword = keyword
     this.value = value
+  }
+}
+
+class Class {
+  constructor(name, methods) {
+    this.name = name
+    this.methods = methods
   }
 }
 
@@ -112,6 +136,9 @@ module.exports = {
   Call,
   Callable,
   While,
+  Class,
+  Get,
+  Set,
   Literal,
   Return,
   Logical,

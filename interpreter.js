@@ -5,6 +5,9 @@ const {
   Call,
   Literal,
   Logical,
+  Class,
+  Get,
+  Set,
   Var,
   Grouping,
   Return,
@@ -53,6 +56,51 @@ class LoxCallable {
     }
     return null
   }
+
+  toString() {
+    return `<${this.declaration.name.lexeme}()>`
+  }
+}
+
+class LoxClass extends LoxCallable {
+  constructor(name) {
+    super()
+    this.name = name
+  }
+
+  call() {
+    return new LoxInstance(this)
+  }
+
+  toString() {
+    return `<${this.name}>`
+  }
+}
+
+class LoxInstance {
+  constructor(klass) {
+    this.klass = klass
+    this.fields = new Map()
+  }
+
+  get (token) {
+    const name = token.lexeme
+    if (this.fields.has(name)) {
+      return this.fields.get(name)
+    }
+
+    throw runtimeError(`Undefined property ${name}`, token)
+    // return null
+  }
+
+  set (token, value) {
+    const name = token.lexeme
+    this.fields.set(name, value)
+  }
+
+  toString () {
+    return `<+${this.klass.name}>`
+  }
 }
 
 class Interpreter {
@@ -75,6 +123,9 @@ class Interpreter {
     if (expr instanceof Block) return this.visitBlock(expr)
     else if (expr instanceof LoxFunction) return this.visitFunction(expr)
     else if (expr instanceof Assignment) return this.visitAssignment(expr)
+    else if (expr instanceof Class) return this.visitClass(expr)
+    else if (expr instanceof Get) return this.visitGet(expr)
+    else if (expr instanceof Set) return this.visitSet(expr)
     else if (expr instanceof Logical) return this.visitLogical(expr)
     else if (expr instanceof Call) return this.visitCall(expr)
     else if (expr instanceof While) return this.visitWhile(expr)
@@ -144,6 +195,35 @@ class Interpreter {
     }
     this.environment.set(variable.name, value)
     return null
+  }
+
+  visitClass(stmt) {
+    // We set the name before initializing it so classes can self-reference
+    this.environment.set(stmt.name, null)
+    const klass = new LoxClass(stmt.name.lexeme)
+    // console.log(klass)
+    this.environment.assign(stmt.name, klass)
+    return null
+  }
+
+  visitGet(expr) {
+    const object = this.evaluate(expr.object)
+    if (object instanceof LoxInstance) {
+      return object.get(expr.name)
+    }
+
+    throw runtimeError('Only instances have properties', expr.name)
+  }
+
+  visitSet(expr) {
+    const object = this.evaluate(expr.object)
+    if (!(object instanceof LoxInstance)) {
+      throw runtimeError('Only instances have fields', expr.name)
+    }
+
+    var val = this.evaluate(expr.value)
+
+    return object.set(expr.name, val)
   }
 
   visitBlock(expr) {

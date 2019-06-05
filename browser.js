@@ -33,7 +33,7 @@ exampleProgram.onchange = e => {
 }
 let defaultProgram = 0
 if (window.location.hash) {
-  defaultProgram = +(window.location.hash.replace(/[^\w\s]/gi, '').trim())
+  defaultProgram = +window.location.hash.replace(/[^\w\s]/gi, '').trim()
 }
 code.value = examplePrograms[defaultProgram].program
 

@@ -10,6 +10,11 @@ let options = {
   prompt: '>'
 }
 
+const printReturnValue = lastLine =>
+  JSON.stringify(
+    lastLine && typeof lastLine.toString === 'function' ? lastLine.toString() : lastLine
+  )
+
 const runPrompt = () => {
   const prompt = options.prompt + ' '
   process.stdout.write(prompt)
@@ -27,8 +32,8 @@ const runPrompt = () => {
     let code = line
     if (!line.endsWith(';') && !line.endsWith('}')) code += ';'
     // TODO: Support multi-line block statements
-    const lastLine = run(code, env, options.debug)
-    console.log(JSON.stringify(lastLine))
+    const lastLine = run(code, env, console.log, options.debug)
+    console.log(printReturnValue(lastLine))
     process.stdout.write(prompt)
   })
 }
@@ -36,7 +41,7 @@ const runPrompt = () => {
 const runFile = filename => {
   try {
     const file = fs.readFileSync(filename, 'utf8')
-    run(file, undefined, options.debug)
+    run(file, undefined, undefined, options.debug)
   } catch (e) {
     console.error(`YALI could not read the file ${filename}`)
     console.error(e)

@@ -6,6 +6,9 @@ const {
   Call,
   Literal,
   While,
+  Class,
+  Get,
+  Set,
   Grouping,
   Return,
   LoxFunction,
@@ -21,6 +24,7 @@ const { parseError: ParseError } = require('./errors')
 const token = tokenizer.tokenEnum
 
 const FUNCTION_TYPE = 'function'
+const METHOD_TYPE = 'method'
 
 class Parser {
   constructor(tokens) {
@@ -43,15 +47,29 @@ class Parser {
 
   declaration() {
     if (this.match(token.FUN)) return this.fun(FUNCTION_TYPE)
+    if (this.match(token.CLASS)) return this.classDeclaration()
     if (this.match(token.VAR)) return this.varDeclaration()
 
     return this.statement()
   }
 
+  classDeclaration() {
+    const name = this.consume(token.IDENTIFIER, `Expected class name`)
+    this.consume(token.LEFT_BRACE, 'expected "{" before class body')
+
+    let methods = []
+    while (!this.check(token.RIGHT_BRACE)) {
+      methods.push(this.fun(METHOD_TYPE))
+    }
+
+    this.consume(token.RIGHT_BRACE, 'expected "}" after class body')
+    return new Class(name, methods)
+  }
+
   fun(type) {
     const name = this.consume(token.IDENTIFIER, `Expected ${type} name`)
 
-    const params = []
+    let params = []
     this.consume(token.LEFT_PAREN, `Expected paren after ${type} name`)
     if (!this.check(token.RIGHT_PAREN)) {
       do {
@@ -104,6 +122,8 @@ class Parser {
       if (expr instanceof Var) {
         const nameToken = expr.name
         return new Assignment(nameToken, value)
+      } else if (expr instanceof Get) {
+        return new Set(expr.object, expr.name, value)
       }
       throw ParseError('Expected Expression', equalToken)
     }
@@ -243,6 +263,9 @@ class Parser {
     while (true) {
       if (this.match(token.LEFT_PAREN)) {
         expr = this.finishCall(expr)
+      } else if (this.match(token.DOT)) {
+        const name = this.consume(token.IDENTIFIER, 'Expected property name after "."')
+        expr = new Get(expr, name)
       } else {
         break
       }
@@ -274,6 +297,8 @@ class Parser {
       this.consume(token.RIGHT_PAREN, `Expect ')' after expression.`)
       return new Grouping(expr)
     }
+
+    console.log('primary')
 
     throw ParseError('Expected Expression', this.peek())
   }
