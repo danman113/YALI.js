@@ -56,8 +56,8 @@ const formatLoxError = (e, code) => {
 
     // Print Critical Code
     return {
-      oneLiner:
-        `Parse Error: ${e.toString()} at ${e.endCoordinates.line}:${e.endCoordinates.col + 1}`,
+      oneLiner: `Parse Error: ${e.toString()} at ${e.endCoordinates.line}:${e.endCoordinates.col +
+        1}`,
       preErrorSection,
       errorSection,
       postErrorSection

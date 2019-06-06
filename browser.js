@@ -31,12 +31,7 @@ const handleError = (e, source = '') => {
     return null
   }
   console.error(e)
-  const {
-    oneLiner,
-    preErrorSection,
-    errorSection,
-    postErrorSection
-  } = formatLoxError(e, source)
+  const { oneLiner, preErrorSection, errorSection, postErrorSection } = formatLoxError(e, source)
   let errorStr = oneLiner
   if (errorSection) {
     errorStr += '<br />'

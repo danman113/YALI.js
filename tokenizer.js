@@ -139,7 +139,8 @@ class Tokenizer {
       if (this.peek() === '\n') this.newline()
       this.chomp()
     }
-    if (this.peek() === '') throw new LoxError('Unfinished string', this.startPosition, this.endPosition)
+    if (this.peek() === '')
+      throw new LoxError('Unfinished string', this.startPosition, this.endPosition)
     this.chomp()
     const value = this.source.substring(this.start + 1, this.current - 1)
     this.addToken(tokenEnum.STRING, value)

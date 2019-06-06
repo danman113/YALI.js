@@ -19,12 +19,7 @@ const printReturnValue = lastLine =>
 
 const printErrorMessage = (e, code) => {
   if (options.debug) console.log(e)
-  const {
-    oneLiner,
-    preErrorSection,
-    errorSection,
-    postErrorSection
-  } = formatLoxError(e, code)
+  const { oneLiner, preErrorSection, errorSection, postErrorSection } = formatLoxError(e, code)
   console.error(oneLiner)
   if (errorSection) {
     console.error(preErrorSection + chalk.bgRed(errorSection) + postErrorSection)
