@@ -1,8 +1,10 @@
 #! /usr/bin/env node
 const fs = require('fs')
 const readline = require('readline')
+const chalk = require('chalk')
 const Environment = require('./environment')
 const { run } = require('./index')
+const { formatLoxError } = require('./errors')
 
 let options = {
   debug: false,
@@ -15,6 +17,26 @@ const printReturnValue = lastLine =>
     lastLine && typeof lastLine.toString === 'function' ? lastLine.toString() : lastLine
   )
 
+const printErrorMessage = (e, code) => {
+  if (options.debug) console.log(e)
+  const {
+    oneLiner,
+    preErrorSection,
+    errorSection,
+    postErrorSection
+  } = formatLoxError(e, code)
+  console.error(oneLiner)
+  if (errorSection) {
+    console.error(preErrorSection + chalk.bgRed(errorSection) + postErrorSection)
+  }
+}
+
+const makeCLIEnvironment = () => {
+  const env = new Environment()
+  env.setBuiltin('readFile', (_vars, args) => fs.readFileSync(args[0], 'utf8'))
+  return env
+}
+
 const runPrompt = () => {
   const prompt = options.prompt + ' '
   process.stdout.write(prompt)
@@ -25,23 +47,31 @@ const runPrompt = () => {
     prompt: prompt,
     historySize: +options.history
   })
-  const env = new Environment()
-  env.setBuiltin('readFile', (_vars, args) => fs.readFileSync(args[0], 'utf8'))
+  const env = makeCLIEnvironment()
 
   lineReader.on('line', line => {
     let code = line
     if (!line.endsWith(';') && !line.endsWith('}')) code += ';'
     // TODO: Support multi-line block statements
-    const lastLine = run(code, env, console.log, options.debug)
-    console.log(printReturnValue(lastLine))
-    process.stdout.write(prompt)
+    try {
+      const lastLine = run(code, env, console.log, options.debug)
+      console.log(printReturnValue(lastLine))
+      process.stdout.write(prompt)
+    } catch (e) {
+      printErrorMessage(e, code)
+    }
   })
 }
 
 const runFile = filename => {
   try {
     const file = fs.readFileSync(filename, 'utf8')
-    run(file, undefined, undefined, options.debug)
+    const env = makeCLIEnvironment()
+    try {
+      run(file, env, console.log, options.debug)
+    } catch (e) {
+      printErrorMessage(e, file)
+    }
   } catch (e) {
     console.error(`YALI could not read the file ${filename}`)
     console.error(e)

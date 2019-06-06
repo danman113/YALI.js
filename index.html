@@ -15,6 +15,14 @@
       flex-wrap: wrap-reverse;
     }
 
+    pre#error {
+      margin-top: -12px;
+    }
+    .error {
+      color: #d24b46;
+      background-color: #ffeff0;
+    }
+
     .col {
       width: 100%;
     }
@@ -47,6 +55,7 @@
     <div class="col">
       <label for="output">Output: </label>
       <textarea id="output" cols="50" rows="15" readonly></textarea>
+      <pre id='error' style="display: none"><code id='errorText'></pre>
     </div>
   </div>
   <div>

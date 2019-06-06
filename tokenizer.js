@@ -1,4 +1,4 @@
-const { error: Error } = require('./errors')
+const { LoxError } = require('./errors')
 const noop = () => {}
 
 const tokens = `
@@ -139,7 +139,7 @@ class Tokenizer {
       if (this.peek() === '\n') this.newline()
       this.chomp()
     }
-    if (this.peek() === '') throw Error('Unfinished string', this.startPosition, this.endPosition)
+    if (this.peek() === '') throw new LoxError('Unfinished string', this.startPosition, this.endPosition)
     this.chomp()
     const value = this.source.substring(this.start + 1, this.current - 1)
     this.addToken(tokenEnum.STRING, value)
@@ -176,7 +176,8 @@ class Tokenizer {
           this.handleIdentifiers()
         } else {
           // Column isn't -1 because we haven't iterated column yet
-          throw Error(
+          console.log(LoxError)
+          throw new LoxError(
             `Unexpected character ${c}`,
             this.startPosition,
             new Coordinate(this.column, this.line, this.current)

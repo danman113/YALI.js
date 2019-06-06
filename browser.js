@@ -1,4 +1,5 @@
 import { run, parse, Environment } from './index'
+import { formatLoxError } from './errors'
 import { printLoxAST } from './transpilers/lox'
 import { readFileSync } from 'fs'
 
@@ -23,6 +24,27 @@ const examplePrograms = exampleProgramSource.map(program => {
     program
   }
 })
+
+const handleError = (e, source = '') => {
+  if (!e) {
+    document.getElementById('error').style.display = 'none'
+    return null
+  }
+  console.error(e)
+  const {
+    oneLiner,
+    preErrorSection,
+    errorSection,
+    postErrorSection
+  } = formatLoxError(e, source)
+  let errorStr = oneLiner
+  if (errorSection) {
+    errorStr += '<br />'
+    errorStr += `${preErrorSection}<span class="error">${errorSection}</span>${postErrorSection}`
+  }
+  document.getElementById('error').style.display = ''
+  document.getElementById('errorText').innerHTML = errorStr
+}
 
 // Handle Example Program Dropdown
 const exampleProgram = document.getElementById('exampleProgram')
@@ -62,10 +84,17 @@ button.onclick = () => {
   browserEnv.setBuiltin('confirm', (_, elem) => confirm(elem[0]))
   browserEnv.setBuiltin('prompt', (_, p) => prompt(p[0], p.length > 1 ? p[1] : null))
   output = ''
-  run(source, browserEnv, handleOutput)
+  try {
+    run(source, browserEnv, handleOutput)
+    handleError(null)
+  } catch (e) {
+    handleError(e, source)
+  }
 }
 
 const formatButton = document.getElementById('format')
 formatButton.onclick = () => {
-  code.value = parse(code.value).map(stmt => printLoxAST(stmt)).join('\n')
+  code.value = parse(code.value)
+    .map(stmt => printLoxAST(stmt))
+    .join('\n')
 }
