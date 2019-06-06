@@ -8,6 +8,7 @@
     "test": "jest",
     "format": "prettier --write *.js",
     "check": "prettier --check *.js",
+    "dev": "parcel dev index.html",
     "build": "parcel build --no-source-maps index.html --public-url ./ -d docs"
   },
   "repository": {

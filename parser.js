@@ -25,6 +25,7 @@ const token = tokenizer.tokenEnum
 
 const FUNCTION_TYPE = 'function'
 const METHOD_TYPE = 'method'
+const forLoopContext = 'forLoop'
 
 class Parser {
   constructor(tokens) {
@@ -165,11 +166,11 @@ class Parser {
     let body = this.statement()
 
     if (inc) {
-      body = new Block([body, new ExpressionStatement(inc)])
+      body = new Block([body, new ExpressionStatement(inc, forLoopContext)], forLoopContext)
     }
-    if (!cond) cond = new Literal(true)
-    body = new While(cond, body)
-    if (init) body = new Block([init, body])
+    if (!cond) cond = new Literal(true, forLoopContext)
+    body = new While(cond, body, forLoopContext)
+    if (init) body = new Block([init, body], forLoopContext)
 
     return body
   }

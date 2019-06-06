@@ -83,7 +83,7 @@ class LoxInstance {
     this.fields = new Map()
   }
 
-  get (token) {
+  get(token) {
     const name = token.lexeme
     if (this.fields.has(name)) {
       return this.fields.get(name)
@@ -93,12 +93,12 @@ class LoxInstance {
     // return null
   }
 
-  set (token, value) {
+  set(token, value) {
     const name = token.lexeme
     this.fields.set(name, value)
   }
 
-  toString () {
+  toString() {
     return `<+${this.klass.name}>`
   }
 }
@@ -201,7 +201,6 @@ class Interpreter {
     // We set the name before initializing it so classes can self-reference
     this.environment.set(stmt.name, null)
     const klass = new LoxClass(stmt.name.lexeme)
-    // console.log(klass)
     this.environment.assign(stmt.name, klass)
     return null
   }

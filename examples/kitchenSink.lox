@@ -1,0 +1,28 @@
+// Kitchen Sink
+fun hello (arg1, arg2) {
+  fun secondHi (helloer) {
+    print helloer + " says hello";
+  }
+  var str = arg1 + " says hello to " + arg2;
+  var maxAge = 18;
+  var age;
+  age = maxAge + 3;
+  if (age < 21) {
+    alert("Too young");
+    while(age < 21) {
+      age = age + 1;
+    }
+  } else {
+    print "come on in";
+  }
+  for (var i = 0; i < 18; i = i + 1) {
+    print i;
+  }
+  return age or maxAge;
+}
+
+
+print "hello source: ";
+print printFunctionBody(hello);
+
+// hello("boss", "man");

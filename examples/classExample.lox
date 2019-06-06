@@ -1,3 +1,4 @@
+// Class Example
 class Lox {
   breakfast() {
     print "Toast";

@@ -16,7 +16,8 @@ class Unary {
 }
 
 class Literal {
-  constructor(value) {
+  constructor(value, context = 'regular') {
+    this.context = context
     this.value = value
   }
 }
@@ -48,7 +49,12 @@ class Grouping {
   }
 }
 
-class ExpressionStatement extends Grouping {}
+class ExpressionStatement extends Grouping {
+  constructor(expression, context = 'regular') {
+    super(expression)
+    this.context = context
+  }
+}
 class PrintStatement extends Grouping {}
 
 class VarStatement {
@@ -66,7 +72,8 @@ class Assignment {
 }
 
 class Block {
-  constructor(statements) {
+  constructor(statements, context = 'regular') {
+    this.context = context
     this.statements = statements
   }
 }
@@ -80,7 +87,8 @@ class Condition {
 }
 
 class While {
-  constructor(condition, body) {
+  constructor(condition, body, context = 'while') {
+    this.context = context
     this.condition = condition
     this.body = body
   }
@@ -91,18 +99,6 @@ class Call {
     this.callee = callee
     this.paren = paren
     this.arguments = args
-  }
-}
-
-// Runtime Classes
-class Callable {
-  constructor(name, func) {
-    this.lexeme = name
-    this.call = func
-  }
-
-  toString() {
-    return '<native fn>'
   }
 }
 
@@ -134,7 +130,6 @@ module.exports = {
   Unary,
   Block,
   Call,
-  Callable,
   While,
   Class,
   Get,

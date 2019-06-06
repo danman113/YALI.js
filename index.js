@@ -51,7 +51,16 @@ const run = (code, environment, printfn, debug = false) => {
   }
 }
 
+const parse = code => {
+  const tokenizer = new Tokenizer(code)
+  const tokens = tokenizer.scanTokens()
+  const parser = new Parser(tokens)
+  const statements = parser.parse()
+  return statements
+}
+
 module.exports = {
   run,
+  parse,
   Environment
 }
