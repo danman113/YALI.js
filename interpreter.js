@@ -89,7 +89,7 @@ class LoxInstance {
       return this.fields.get(name)
     }
 
-    throw runtimeError(`Undefined property ${name}`, token)
+    throw runtimeError(`Undefined property "${name}"`, token)
     // return null
   }
 

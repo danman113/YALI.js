@@ -12,6 +12,16 @@ class LoxError {
   }
 }
 
+class RuntimeError extends LoxError {
+  constructor(msg, token) {
+    super(
+      `${nullable(token.lexeme && `at "${token.lexeme}": `)}${msg}`,
+      token.startCoordinates,
+      token.endCoordinates
+    )
+  }
+}
+
 class ReturnError {
   constructor(val) {
     this.value = val
@@ -33,12 +43,7 @@ const parseError = (msg, token) => {
   }
 }
 
-const runtimeError = (msg, token) =>
-  new LoxError(
-    `${nullable(token.lexeme && `at "${token.lexeme}": `)}${msg}`,
-    token.startCoordinates,
-    token.endCoordinates
-  )
+const runtimeError = (msg, token) => new RuntimeError(msg, token)
 
 const formatLoxError = (e, code) => {
   if (e instanceof LoxError) {
@@ -55,8 +60,9 @@ const formatLoxError = (e, code) => {
     const postErrorSection = code.substring(e.endCoordinates.index, postErrorStart)
 
     // Print Critical Code
+    const errorType = e instanceof RuntimeError ? 'Runtime Error' : 'Parse Error'
     return {
-      oneLiner: `Parse Error: ${e.toString()} at ${e.endCoordinates.line}:${e.endCoordinates.col +
+      oneLiner: `${errorType}: ${e.toString()} at ${e.endCoordinates.line}:${e.endCoordinates.col +
         1}`,
       preErrorSection,
       errorSection,
