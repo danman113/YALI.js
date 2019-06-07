@@ -21,6 +21,8 @@ const {
   Condition
 } = require('../types')
 
+const condChar = (condition, replacer = ' ') => condition ? replacer : ''
+
 const ASTNodeMap = new Map()
 
 // Declarations
@@ -38,7 +40,7 @@ ASTNodeMap.set(VarStatement, node => {
 
 ASTNodeMap.set(Condition, ({ condition, thenBranch, elseBranch }, scope, options) => {
   const cond = printLoxAST(condition)
-  const conditionSection = `if (${cond}) `
+  const conditionSection = `if${condChar(options.spaceBeforeParams)}(${cond}) `
   const thenSection = printLoxAST(thenBranch, scope, options, false)
   const elseSection = elseBranch && printLoxAST(elseBranch, scope, options, false)
   return conditionSection + thenSection + (elseSection ? ` else ${elseSection}` : '')
@@ -46,16 +48,16 @@ ASTNodeMap.set(Condition, ({ condition, thenBranch, elseBranch }, scope, options
 
 ASTNodeMap.set(LoxFunction, ({ bodyStatements: body, name: { lexeme: name }, params}, scope, options) => {
   const parameters = params.map(token => token.lexeme)
-  const head = `fun ${name}(${parameters.join(', ')}) {`
+  const head = `fun ${name}${condChar(options.spaceBeforeParams)}(${parameters.join(', ')}) {`
   const fnBody = body.map(stmt => printLoxAST(stmt, scope + 1, options))
-  const tail = options.indent.repeat(scope) + '}'
+  const tail = options.indent.repeat(scope) + '}' + condChar(options.functionNewlines, '\n')
   return [head, ...fnBody, tail].join('\n')
 })
 
 
 const handleWhileLoop = ({ body, condition }, scope, options) => {
   const cond = printLoxAST(condition)
-  const conditionSection = `while (${cond}) `
+  const conditionSection = `while${condChar(options.spaceBeforeParams)}(${cond}) `
   const bodySection = printLoxAST(body, scope, options, false)
   return conditionSection + bodySection
 }
@@ -73,7 +75,7 @@ const whileForLoop = ({ body, condition }, scope, options, initializer = ';') =>
   }
   const bodySection = printLoxAST(realBody, scope, options, false)
   const steps = [cond, inc]
-  return `for (${initializer} ${steps.join('; ')}) ${bodySection}`
+  return `for${condChar(options.spaceBeforeParams)}(${initializer} ${steps.join('; ')}) ${bodySection}`
 }
 
 ASTNodeMap.set(While, (node, scope, options) => {
@@ -151,7 +153,8 @@ ASTNodeMap.set(Literal, ({ value }) => {
 const printLoxAST = (node, scope = 0, optionsOverride = {}, initialIndent = true) => {
   const options = Object.assign({}, {
     indent: '\t',
-    spaceBeforeParams: true
+    spaceBeforeParams: true,
+    functionNewlines: true
   }, optionsOverride)
 
   if (ASTNodeMap.has(node.constructor)) {
