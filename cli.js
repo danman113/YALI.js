@@ -96,7 +96,7 @@ const main = argv => {
   const args = processOptions(argv.slice(2))
   if (options.debug) console.log(options)
   if (args.length > 1) {
-    console.error('Usage: jlox [script]')
+    console.error('Usage: yali [script]')
     return 64
   } else if (args.length === 1) {
     runFile(args[0])

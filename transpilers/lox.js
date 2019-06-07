@@ -26,7 +26,7 @@ const condChar = (condition, replacer = ' ') => condition ? replacer : ''
 const ASTNodeMap = new Map()
 
 // Declarations
-ASTNodeMap.set(ExpressionStatement, node => printLoxAST(node.expression) + (node.context === 'forLoop' ? '' : ';'))
+ASTNodeMap.set(ExpressionStatement, (node, scope, options) => printLoxAST(node.expression, 0, options) + (node.context === 'forLoop' ? '' : ';'))
 
 ASTNodeMap.set(PrintStatement, node => 'print ' + printLoxAST(node.expression) + ';')
 
@@ -94,7 +94,7 @@ const blockForLoop = ({ statements }, scope, options) => {
 
 const printBlock = ({ statements }, scope, options) =>
   '{\n' +
-  statements.map(stmt => printLoxAST(stmt, scope + 1)).join('\n') +
+  statements.map(stmt => printLoxAST(stmt, scope + 1, options)).join('\n') +
   `\n${options.indent.repeat(scope)}}`
 
 ASTNodeMap.set(Block, (node, scope, options) => {
@@ -134,6 +134,7 @@ ASTNodeMap.set(Call, node => {
   const callee = printLoxAST(node.callee)
   return `${callee}(${args})`
 })
+
 ASTNodeMap.set(Assignment, node => {
   const name = node.name.lexeme
   const value = printLoxAST(node.value)

@@ -3,13 +3,17 @@
   "version": "0.10.2",
   "description": "Yet Another Lox Interpreter. Javascript Implementation of the Lox Programming Language",
   "main": "index.js",
-  "bin": "./cli.js",
+  "bin": {
+    "yali": "./cli.js",
+    "loxfmt": "./loxfmt.js"
+  },
   "scripts": {
     "test": "jest",
     "format": "prettier --write *.js",
     "check": "prettier --check *.js",
     "dev": "parcel dev index.html",
-    "build": "parcel build --no-source-maps index.html --public-url ./ -d docs"
+    "lint": "./node_modules/.bin/eslint **.js",
+    "build": "parcel build --no-source-maps index.html --no-content-hash --public-url ./ -d docs"
   },
   "repository": {
     "type": "git",
@@ -22,6 +26,7 @@
   },
   "homepage": "https://github.com/danman113/YALI.js#readme",
   "devDependencies": {
+    "eslint": "^5.16.0",
     "jest": "^24.7.1",
     "parcel": "^1.12.3",
     "prettier": "1.17.0"

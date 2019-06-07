@@ -17,6 +17,7 @@
 
     pre#error {
       margin-top: -12px;
+      transition: max-height 1s;
     }
     .error {
       color: #d24b46;
@@ -51,20 +52,20 @@
     <div class="col">
       <label for="code">Code: </label>
       <textarea id="code" cols="50" rows="15"></textarea>
+      <div>
+        <button id="run">
+          Run
+        </button>
+        <button id="format" class="button-outline">
+          Format
+        </button>
+      </div>
     </div>
     <div class="col">
       <label for="output">Output: </label>
       <textarea id="output" cols="50" rows="15" readonly></textarea>
-      <pre id='error' style="display: none"><code id='errorText'></pre>
+      <pre id='error' style="max-height: 0"><code id='errorText'></pre>
     </div>
-  </div>
-  <div>
-    <button id="run">
-      Run
-    </button>
-    <button id="format" class="button-outline">
-      Format
-    </button>
   </div>
   <div>
     <small>

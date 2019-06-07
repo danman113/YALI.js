@@ -27,7 +27,7 @@ const examplePrograms = exampleProgramSource.map(program => {
 
 const handleError = (e, source = '') => {
   if (!e) {
-    document.getElementById('error').style.display = 'none'
+    document.getElementById('error').style.maxHeight = '0'
     return null
   }
   console.error(e)
@@ -37,7 +37,7 @@ const handleError = (e, source = '') => {
     errorStr += '<br />'
     errorStr += `${preErrorSection}<span class="error">${errorSection}</span>${postErrorSection}`
   }
-  document.getElementById('error').style.display = ''
+  document.getElementById('error').style.maxHeight = '150px'
   document.getElementById('errorText').innerHTML = errorStr
 }
 
@@ -51,9 +51,13 @@ exampleProgram.onchange = e => {
   const selectedProgram = e.target.value
   code.value = examplePrograms[selectedProgram].program
 }
+
+// Pick default program to load
 let defaultProgram = 0
 if (window.location.hash) {
-  defaultProgram = +window.location.hash.replace(/[^\w\s]/gi, '').trim()
+  let hashValue = +window.location.hash.replace(/[^\w\s]/gi, '').trim()
+  if (hashValue < exampleProgram.length) defaultProgram = hashValue
+  exampleProgram.value = defaultProgram
 }
 code.value = examplePrograms[defaultProgram].program
 
@@ -89,7 +93,12 @@ button.onclick = () => {
 
 const formatButton = document.getElementById('format')
 formatButton.onclick = () => {
-  code.value = parse(code.value)
-    .map(stmt => printLoxAST(stmt))
-    .join('\n')
+  try {
+    code.value = parse(code.value)
+      .map(stmt => printLoxAST(stmt))
+      .join('\n')
+    handleError(null)
+  } catch (e) {
+    handleError(e, code.value)
+  }
 }
