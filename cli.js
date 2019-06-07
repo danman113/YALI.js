@@ -79,7 +79,7 @@ const processOptions = args =>
     .map(arg => {
       const match = optionRegex.exec(arg)
       if (match) {
-        const [_, option, value] = match
+        const [, option, value] = match
         if (!value) {
           options[option] = !options[option]
         } else {
@@ -105,4 +105,4 @@ const main = argv => {
   }
 }
 
-return main(process.argv)
+main(process.argv)

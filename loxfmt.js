@@ -80,4 +80,4 @@ const main = argv => {
   }
 }
 
-return main(process.argv)
+main(process.argv)

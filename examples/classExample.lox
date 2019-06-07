@@ -2,6 +2,8 @@
 class Lox {
   breakfast() {
     print "Toast";
+    this.hello = "toast";
+    return this.hello;
   }
 }
 
@@ -16,6 +18,7 @@ var loxInstance = Lox();
 
 loxInstance.category = "Breakfast";
 print loxInstance.category;
+print loxInstance.breakfast();
 
 print Lox();
 

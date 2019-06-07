@@ -9,6 +9,7 @@ const {
   Get,
   Set,
   Var,
+  This,
   Grouping,
   Return,
   While,
@@ -57,15 +58,22 @@ class LoxCallable {
     return null
   }
 
+  bind(instance) {
+    const env = new Environment(this.closure)
+    env.set({ lexeme: 'this' }, instance)
+    return new LoxCallable(this.declaration, env)
+  }
+
   toString() {
     return `<${this.declaration.name.lexeme}()>`
   }
 }
 
 class LoxClass extends LoxCallable {
-  constructor(name) {
+  constructor(name, methods) {
     super()
     this.name = name
+    this.methods = methods
   }
 
   call() {
@@ -85,11 +93,11 @@ class LoxInstance {
 
   get(token) {
     const name = token.lexeme
-    if (this.fields.has(name)) {
-      return this.fields.get(name)
-    }
+    if (this.fields.has(name)) return this.fields.get(name)
 
-    throw runtimeError(`Undefined property ${name}`, token)
+    if (this.klass.methods.has(name)) return this.klass.methods.get(name).bind(this)
+
+    throw runtimeError(`Undefined property "${name}"`, token)
     // return null
   }
 
@@ -126,6 +134,7 @@ class Interpreter {
     else if (expr instanceof Class) return this.visitClass(expr)
     else if (expr instanceof Get) return this.visitGet(expr)
     else if (expr instanceof Set) return this.visitSet(expr)
+    else if (expr instanceof This) return this.visitThis(expr)
     else if (expr instanceof Logical) return this.visitLogical(expr)
     else if (expr instanceof Call) return this.visitCall(expr)
     else if (expr instanceof While) return this.visitWhile(expr)
@@ -200,7 +209,12 @@ class Interpreter {
   visitClass(stmt) {
     // We set the name before initializing it so classes can self-reference
     this.environment.set(stmt.name, null)
-    const klass = new LoxClass(stmt.name.lexeme)
+    const methods = new Map()
+    for (let method of stmt.methods) {
+      const fun = new LoxCallable(method, this.environment)
+      methods.set(method.name.lexeme, fun)
+    }
+    const klass = new LoxClass(stmt.name.lexeme, methods)
     this.environment.assign(stmt.name, klass)
     return null
   }
@@ -223,6 +237,10 @@ class Interpreter {
     var val = this.evaluate(expr.value)
 
     return object.set(expr.name, val)
+  }
+
+  visitThis(expr) {
+    return this.environment.get({ name: expr.keyword })
   }
 
   visitBlock(expr) {

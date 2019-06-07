@@ -109,6 +109,12 @@ class Return {
   }
 }
 
+class This {
+  constructor(keyword) {
+    this.keyword = keyword
+  }
+}
+
 class Class {
   constructor(name, methods) {
     this.name = name
@@ -137,6 +143,7 @@ module.exports = {
   Literal,
   Return,
   Logical,
+  This,
   LoxFunction,
   Grouping,
   Condition,

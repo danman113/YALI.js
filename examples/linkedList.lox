@@ -1,0 +1,42 @@
+// Linked List via Classes
+class Link {}
+
+fun newLink (value, next) {
+  var link = Link();
+  link.value = value;
+  link.next = next;
+  link.append
+  return link;
+}
+
+var ll = newLink(1, newLink(2, newLink(3, nil)));
+
+fun traverse(n, fn) {
+  fn(n);
+  if (n.next != nil) {
+    return traverse(n.next, fn);
+  }
+  return n;
+}
+
+fun printList(list) {
+  fun printNode (n) {
+    print n.value;
+  }
+  traverse(list, printNode);
+}
+
+fun append(list, newNode) {
+  fun walk (n) {}
+  var end = traverse(list, walk);
+  end.next = newNode;
+  return end;
+}
+
+print "list:";
+printList(ll);
+
+append(ll, newLink(40, nil));
+
+print "list:";
+printList(ll);

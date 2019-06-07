@@ -11,7 +11,7 @@ module.exports = {
     },
     "parserOptions": {
         "ecmaVersion": 2018,
-        "sourceType": "commonjs"
+        "sourceType": "module"
     },
     "rules": {
         "no-console": 0

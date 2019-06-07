@@ -9,6 +9,7 @@ const {
   Class,
   Get,
   Set,
+  This,
   Grouping,
   Return,
   LoxFunction,
@@ -262,6 +263,7 @@ class Parser {
   call() {
     let expr = this.primary()
     while (true) {
+      //eslint-disable-line
       if (this.match(token.LEFT_PAREN)) {
         expr = this.finishCall(expr)
       } else if (this.match(token.DOT)) {
@@ -291,6 +293,7 @@ class Parser {
     if (this.match(token.TRUE)) return new Literal(true)
     if (this.match(token.NIL)) return new Literal(null)
     if (this.match(token.NUMBER, token.STRING)) return new Literal(this.previous().literal)
+    if (this.match(token.THIS)) return new This(this.previous())
     if (this.match(token.IDENTIFIER)) return new Var(this.previous())
 
     if (this.match(token.LEFT_PAREN)) {
