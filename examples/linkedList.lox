@@ -1,15 +1,12 @@
 // Linked List via Classes
-class Link {}
-
-fun newLink (value, next) {
-  var link = Link();
-  link.value = value;
-  link.next = next;
-  link.append
-  return link;
+class Link {
+  init(value, next) {
+    this.value = value;
+    this.next = next;
+  }
 }
 
-var ll = newLink(1, newLink(2, newLink(3, nil)));
+var ll = Link(1, Link(2, Link(3, nil)));
 
 fun traverse(n, fn) {
   fn(n);
@@ -36,7 +33,7 @@ fun append(list, newNode) {
 print "list:";
 printList(ll);
 
-append(ll, newLink(40, nil));
+append(ll, Link(40, nil));
 
 print "list:";
 printList(ll);

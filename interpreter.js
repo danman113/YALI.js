@@ -41,7 +41,7 @@ class LoxCallable {
     this.closure = closure
   }
 
-  call(interpreter, args) {
+  call(interpreter, args, isInit = false) {
     const env = new Environment(this.closure)
     for (let param = 0; param < this.declaration.params.length; param++) {
       env.set(this.declaration.params[param], args[param])
@@ -55,6 +55,9 @@ class LoxCallable {
         throw ret
       }
     }
+
+    // Always return "this" if a function is an initializer
+    if (isInit) return this.closure.get({ name: { lexeme: 'this' } })
     return null
   }
 
@@ -76,8 +79,11 @@ class LoxClass extends LoxCallable {
     this.methods = methods
   }
 
-  call() {
-    return new LoxInstance(this)
+  call(interpreter, args) {
+    const instance = new LoxInstance(this)
+    const init = this.methods.get('init')
+    if (init) init.bind(instance).call(interpreter, args, true)
+    return instance
   }
 
   toString() {
