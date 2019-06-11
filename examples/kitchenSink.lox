@@ -7,8 +7,11 @@ fun hello (arg1, arg2) {
   var maxAge = 18;
   var age;
   age = maxAge + 3;
+  {
+    print 23;
+  }
   if (age < 21) {
-    alert("Too young");
+    print "Too young";
     while(age < 21) {
       age = age + 1;
     }
@@ -23,6 +26,6 @@ fun hello (arg1, arg2) {
 
 
 print "hello source: ";
-print printFunctionBody(hello);
+// print printFunctionBody(hello);
 
-// hello("boss", "man");
+hello("boss", "man");

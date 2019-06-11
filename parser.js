@@ -34,10 +34,6 @@ class Parser {
     this.current = 0
   }
 
-  expression() {
-    return this.assignment()
-  }
-
   parse() {
     let statements = []
     while (!this.isAtEnd) {
@@ -106,41 +102,6 @@ class Parser {
     return this.expressionStatement()
   }
 
-  returnStatement() {
-    const prev = this.previous()
-    let value = null
-    if (!this.check(token.SEMICOLON)) {
-      value = this.expression()
-    }
-    this.consume(token.SEMICOLON, 'Expected ";" after return value')
-    return new Return(prev, value)
-  }
-
-  assignment() {
-    const expr = this.or()
-    if (this.match(token.EQUAL)) {
-      const equalToken = this.previous()
-      const value = this.assignment()
-      if (expr instanceof Var) {
-        const nameToken = expr.name
-        return new Assignment(nameToken, value)
-      } else if (expr instanceof Get) {
-        return new Set(expr.object, expr.name, value)
-      }
-      throw ParseError('Expected Expression', equalToken)
-    }
-
-    return expr
-  }
-
-  or() {
-    return this.matchBinary('and', Logical, token.OR)
-  }
-
-  and() {
-    return this.matchBinary('equality', Logical, token.AND)
-  }
-
   forStatement() {
     this.consume(token.LEFT_PAREN, 'Expected "(" after "for"')
 
@@ -206,16 +167,56 @@ class Parser {
     return statements
   }
 
+  printStatement() {
+    const val = this.expression()
+    this.consume(token.SEMICOLON, 'Expect ; after value.')
+    return new PrintStatement(val)
+  }
+
+  returnStatement() {
+    const prev = this.previous()
+    let value = null
+    if (!this.check(token.SEMICOLON)) {
+      value = this.expression()
+    }
+    this.consume(token.SEMICOLON, 'Expected ";" after return value')
+    return new Return(prev, value)
+  }
+
+
   expressionStatement() {
     const val = this.expression()
     this.consume(token.SEMICOLON, 'Expect ; after value.')
     return new ExpressionStatement(val)
   }
 
-  printStatement() {
-    const val = this.expression()
-    this.consume(token.SEMICOLON, 'Expect ; after value.')
-    return new PrintStatement(val)
+  expression() {
+    return this.assignment()
+  }
+
+  assignment() {
+    const expr = this.or()
+    if (this.match(token.EQUAL)) {
+      const equalToken = this.previous()
+      const value = this.assignment()
+      if (expr instanceof Var) {
+        const nameToken = expr.name
+        return new Assignment(nameToken, value)
+      } else if (expr instanceof Get) {
+        return new Set(expr.object, expr.name, value)
+      }
+      throw ParseError('Expected Expression', equalToken)
+    }
+
+    return expr
+  }
+
+  or() {
+    return this.matchBinary('and', Logical, token.OR)
+  }
+
+  and() {
+    return this.matchBinary('equality', Logical, token.AND)
   }
 
   matchBinary(method, Class, ...operators) {
@@ -262,8 +263,7 @@ class Parser {
 
   call() {
     let expr = this.primary()
-    while (true) {
-      //eslint-disable-line
+    while (true) { //eslint-disable-line
       if (this.match(token.LEFT_PAREN)) {
         expr = this.finishCall(expr)
       } else if (this.match(token.DOT)) {

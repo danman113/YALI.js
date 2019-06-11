@@ -12,6 +12,7 @@ const exampleProgramSource = [
   readFileSync(__dirname + '/examples/interactiveFibonacci.lox', 'utf-8'),
   readFileSync(__dirname + '/examples/closureLinkedList.lox', 'utf-8'),
   readFileSync(__dirname + '/examples/kitchenSink.lox', 'utf-8'),
+  readFileSync(__dirname + '/examples/linkedList.lox', 'utf-8'),
   readFileSync(__dirname + '/examples/classExample.lox', 'utf-8')
 ]
 const examplePrograms = exampleProgramSource.map(program => {
@@ -94,7 +95,9 @@ button.onclick = () => {
 const formatButton = document.getElementById('format')
 formatButton.onclick = () => {
   try {
-    code.value = parse(code.value)
+    const ast = parse(code.value)
+    global.ast = ast
+    code.value = ast
       .map(stmt => printLoxAST(stmt))
       .join('\n')
     handleError(null)
