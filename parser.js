@@ -183,7 +183,6 @@ class Parser {
     return new Return(prev, value)
   }
 
-
   expressionStatement() {
     const val = this.expression()
     this.consume(token.SEMICOLON, 'Expect ; after value.')
@@ -263,7 +262,8 @@ class Parser {
 
   call() {
     let expr = this.primary()
-    while (true) { //eslint-disable-line
+    while (true) {
+      //eslint-disable-line
       if (this.match(token.LEFT_PAREN)) {
         expr = this.finishCall(expr)
       } else if (this.match(token.DOT)) {
