@@ -31,4 +31,4 @@ fun printTail (n) {
 var list = Link(1, Link(2, Link(3, nil)));
 
 traverse(list, printValue);
-printTail(list, printTail);
+printTail(list);

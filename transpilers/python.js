@@ -27,10 +27,7 @@ const indentation = (scope, options) => options.indent.repeat(scope)
 const ASTNodeMap = new Map()
 
 // Declarations
-ASTNodeMap.set(ExpressionStatement, (node, scope, options, initialIndent) => {
-  // console.log(initialIndent)
-  return indentation(scope, options) + loxToPython2(node.expression, 0, options, initialIndent)
-})
+ASTNodeMap.set(ExpressionStatement, (node, scope, options, initialIndent) => indentation(scope, options) + loxToPython2(node.expression, 0, options, initialIndent))
 
 ASTNodeMap.set(PrintStatement, (node, scope, options) => indentation(scope, options) + 'print ' + loxToPython2(node.expression))
 
@@ -54,8 +51,8 @@ ASTNodeMap.set(Condition, ({ condition, thenBranch, elseBranch }, scope, options
 ASTNodeMap.set(LoxFunction, ({ bodyStatements: body, name: { lexeme: name }, params}, scope, options) => {
   const parameters = params.map(token => token.lexeme)
   const head = indentation(scope, options) + `def ${name}(${parameters.join(', ')}):`
-  const fnBody = body.map(stmt => loxToPython2(stmt, scope + 1, options))
-  // console.log(fnBody)
+  // Python doesn't have blank function declarations
+  const fnBody = body.length > 0 ? body.map(stmt => loxToPython2(stmt, scope + 1, options)) : [indentation(scope + 1, options) + 'pass']
   return [head, ...fnBody].join('\n')
 })
 
@@ -108,7 +105,7 @@ ASTNodeMap.set(Literal, ({ value }) => {
   if (typeof value === 'string') {
     return `"${value}"`
   } else if (value === null) {
-    return 'nil'
+    return 'None'
   } else {
     return value
   }
