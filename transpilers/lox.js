@@ -6,9 +6,9 @@ const {
   Literal,
   While,
   // @TODO: Support Classes
-  Class,
-  Get,
-  Set,
+  // Class,
+  // Get,
+  // Set,
   Grouping,
   Return,
   LoxFunction,
@@ -162,7 +162,7 @@ const printLoxAST = (node, scope = 0, optionsOverride = {}, initialIndent = true
     const indentation = (initialIndent ? options.indent.repeat(scope) : '')
     return indentation + ASTNodeMap.get(node.constructor)(node, scope, options)
   }
-  throw new Error(`Don't support that context yet`, node.constructor)
+  throw new Error(`Don't support classes yet`, node.constructor)
 }
 
 module.exports = {

@@ -22,38 +22,38 @@ const {
 } = require('../types')
 
 // const condChar = (condition, replacer = ' ') => condition ? replacer : ''
+const indentation = (scope, options) => options.indent.repeat(scope)
 
 const ASTNodeMap = new Map()
 
 // Declarations
 ASTNodeMap.set(ExpressionStatement, (node, scope, options, initialIndent) => {
   // console.log(initialIndent)
-  return loxToPython2(node.expression, 0, options, initialIndent)
+  return indentation(scope, options) + loxToPython2(node.expression, 0, options, initialIndent)
 })
 
-ASTNodeMap.set(PrintStatement, node => 'print ' + loxToPython2(node.expression))
+ASTNodeMap.set(PrintStatement, (node, scope, options) => indentation(scope, options) + 'print ' + loxToPython2(node.expression))
 
-ASTNodeMap.set(Return, node => 'return ' + loxToPython2(node.value))
+ASTNodeMap.set(Return, (node, scope, options) => indentation(scope, options) + 'return ' + loxToPython2(node.value))
 
-ASTNodeMap.set(VarStatement, (node) => {
-  const name = node.name.lexeme
-  const initializer = node.initializer ? loxToPython2(node.initializer) : null
+ASTNodeMap.set(VarStatement, (node, scope, options) => {
   // Python doesn't have plain declarations...
   if (!node.initializer) return ''
-  return `${name}` + (initializer ? ` = ${initializer}` : '')
+  const name = node.name.lexeme
+  return indentation(scope, options) + `${name} = ${loxToPython2(node.initializer)}`
 })
 
 ASTNodeMap.set(Condition, ({ condition, thenBranch, elseBranch }, scope, options) => {
   const cond = loxToPython2(condition)
-  const conditionSection = `if ${cond}:\n`
+  const conditionSection = indentation(scope, options) + `if ${cond}:\n`
   const thenSection = loxToPython2(thenBranch, scope + 1, options, false)
   const elseSection = elseBranch && loxToPython2(elseBranch, scope + 1, options, false)
-  return conditionSection + thenSection + (elseSection ? `\n${options.indent.repeat(scope)}else:\n${elseSection}` : '')
+  return conditionSection + thenSection + (elseSection ? `\n${indentation(scope, options)}else:\n${elseSection}` : '')
 })
 
 ASTNodeMap.set(LoxFunction, ({ bodyStatements: body, name: { lexeme: name }, params}, scope, options) => {
   const parameters = params.map(token => token.lexeme)
-  const head = `def ${name}(${parameters.join(', ')}):`
+  const head = indentation(scope, options) + `def ${name}(${parameters.join(', ')}):`
   const fnBody = body.map(stmt => loxToPython2(stmt, scope + 1, options))
   // console.log(fnBody)
   return [head, ...fnBody].join('\n')
@@ -61,7 +61,7 @@ ASTNodeMap.set(LoxFunction, ({ bodyStatements: body, name: { lexeme: name }, par
 
 ASTNodeMap.set(While, ({ body, condition }, scope, options) => {
   const cond = loxToPython2(condition)
-  const conditionSection = `while ${cond}:\n`
+  const conditionSection = indentation(scope, options) + `while ${cond}:\n`
   const bodySection = loxToPython2(body, scope + 1, options, false)
   return conditionSection + bodySection
 })
@@ -114,16 +114,15 @@ ASTNodeMap.set(Literal, ({ value }) => {
   }
 })
 
-const loxToPython2 = (node, scope = 0, optionsOverride = {}, initialIndent = true) => {
+const loxToPython2 = (node, scope = 0, optionsOverride = {}) => {
   const options = Object.assign({}, {
-    indent: ' ',
+    indent: '\t',
   }, optionsOverride)
 
   if (ASTNodeMap.has(node.constructor)) {
-    const indentation = (initialIndent ? options.indent.repeat(scope) : '')
-    return indentation + ASTNodeMap.get(node.constructor)(node, scope, options)
+    return ASTNodeMap.get(node.constructor)(node, scope, options)
   }
-  throw new Error(`Don't support that context yet`, node.constructor)
+  throw new Error(`Don't support classes yet`, node.constructor)
 }
 
 module.exports = {
