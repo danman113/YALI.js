@@ -5,7 +5,8 @@
   "main": "index.js",
   "bin": {
     "yali": "./cli.js",
-    "loxfmt": "./loxfmt.js"
+    "loxfmt": "./loxfmt.js",
+    "lox2python": "./lox2python.js"
   },
   "scripts": {
     "test": "jest",

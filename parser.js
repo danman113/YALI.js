@@ -262,8 +262,8 @@ class Parser {
 
   call() {
     let expr = this.primary()
+    //eslint-disable-next-line
     while (true) {
-      //eslint-disable-line
       if (this.match(token.LEFT_PAREN)) {
         expr = this.finishCall(expr)
       } else if (this.match(token.DOT)) {
