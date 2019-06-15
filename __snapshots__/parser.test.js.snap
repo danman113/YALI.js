@@ -3,6 +3,7 @@
 exports[`Expression Parsing Parses addition correctly 1`] = `
 Binary {
   "left": Literal {
+    "context": "regular",
     "value": 3,
   },
   "operator": Token {
@@ -21,6 +22,7 @@ Binary {
     "type": 7,
   },
   "right": Literal {
+    "context": "regular",
     "value": 1,
   },
 }
@@ -45,6 +47,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 2,
     },
   },
@@ -64,6 +67,7 @@ Binary {
     "type": 7,
   },
   "right": Literal {
+    "context": "regular",
     "value": 2,
   },
 }
@@ -88,6 +92,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 3,
     },
   },
@@ -123,6 +128,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 3,
     },
   },
@@ -132,6 +138,7 @@ Binary {
 exports[`Expression Parsing Parses addition correctly 4`] = `
 Binary {
   "left": Literal {
+    "context": "regular",
     "value": 3,
   },
   "operator": Token {
@@ -150,6 +157,7 @@ Binary {
     "type": 6,
   },
   "right": Literal {
+    "context": "regular",
     "value": 1,
   },
 }
@@ -174,6 +182,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 2,
     },
   },
@@ -193,6 +202,7 @@ Binary {
     "type": 6,
   },
   "right": Literal {
+    "context": "regular",
     "value": 2,
   },
 }
@@ -217,6 +227,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 3,
     },
   },
@@ -252,6 +263,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 3,
     },
   },
@@ -261,6 +273,7 @@ Binary {
 exports[`Expression Parsing Parses comparison correctly 1`] = `
 Binary {
   "left": Literal {
+    "context": "regular",
     "value": 3,
   },
   "operator": Token {
@@ -279,6 +292,7 @@ Binary {
     "type": 15,
   },
   "right": Literal {
+    "context": "regular",
     "value": 1,
   },
 }
@@ -287,6 +301,7 @@ Binary {
 exports[`Expression Parsing Parses comparison correctly 2`] = `
 Binary {
   "left": Literal {
+    "context": "regular",
     "value": 2,
   },
   "operator": Token {
@@ -305,6 +320,7 @@ Binary {
     "type": 17,
   },
   "right": Literal {
+    "context": "regular",
     "value": 2,
   },
 }
@@ -313,6 +329,7 @@ Binary {
 exports[`Expression Parsing Parses comparison correctly 3`] = `
 Binary {
   "left": Literal {
+    "context": "regular",
     "value": 3,
   },
   "operator": Token {
@@ -331,6 +348,7 @@ Binary {
     "type": 18,
   },
   "right": Literal {
+    "context": "regular",
     "value": 3,
   },
 }
@@ -339,6 +357,7 @@ Binary {
 exports[`Expression Parsing Parses comparison correctly 4`] = `
 Binary {
   "left": Literal {
+    "context": "regular",
     "value": 3,
   },
   "operator": Token {
@@ -357,6 +376,7 @@ Binary {
     "type": 16,
   },
   "right": Literal {
+    "context": "regular",
     "value": 1,
   },
 }
@@ -365,6 +385,7 @@ Binary {
 exports[`Expression Parsing Parses equality correctly 1`] = `
 Binary {
   "left": Literal {
+    "context": "regular",
     "value": 3,
   },
   "operator": Token {
@@ -383,6 +404,7 @@ Binary {
     "type": 14,
   },
   "right": Literal {
+    "context": "regular",
     "value": 3,
   },
 }
@@ -391,6 +413,7 @@ Binary {
 exports[`Expression Parsing Parses equality correctly 2`] = `
 Binary {
   "left": Literal {
+    "context": "regular",
     "value": 3,
   },
   "operator": Token {
@@ -409,6 +432,7 @@ Binary {
     "type": 12,
   },
   "right": Literal {
+    "context": "regular",
     "value": 2,
   },
 }
@@ -417,6 +441,7 @@ Binary {
 exports[`Expression Parsing Parses equality correctly 3`] = `
 Binary {
   "left": Literal {
+    "context": "regular",
     "value": 3,
   },
   "operator": Token {
@@ -451,6 +476,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 3,
     },
   },
@@ -476,6 +502,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 3,
     },
   },
@@ -511,6 +538,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 3,
     },
   },
@@ -536,6 +564,7 @@ Binary {
       "type": 11,
     },
     "right": Literal {
+      "context": "regular",
       "value": true,
     },
   },
@@ -555,6 +584,7 @@ Binary {
     "type": 12,
   },
   "right": Literal {
+    "context": "regular",
     "value": true,
   },
 }
@@ -579,6 +609,7 @@ Binary {
       "type": 11,
     },
     "right": Literal {
+      "context": "regular",
       "value": true,
     },
   },
@@ -614,6 +645,7 @@ Binary {
       "type": 11,
     },
     "right": Literal {
+      "context": "regular",
       "value": true,
     },
   },
@@ -623,6 +655,7 @@ Binary {
 exports[`Expression Parsing Parses multiplication correctly 1`] = `
 Binary {
   "left": Literal {
+    "context": "regular",
     "value": 3,
   },
   "operator": Token {
@@ -641,6 +674,7 @@ Binary {
     "type": 10,
   },
   "right": Literal {
+    "context": "regular",
     "value": 1,
   },
 }
@@ -665,6 +699,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 2,
     },
   },
@@ -684,6 +719,7 @@ Binary {
     "type": 10,
   },
   "right": Literal {
+    "context": "regular",
     "value": 2,
   },
 }
@@ -708,6 +744,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 3,
     },
   },
@@ -743,6 +780,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 3,
     },
   },
@@ -752,6 +790,7 @@ Binary {
 exports[`Expression Parsing Parses multiplication correctly 4`] = `
 Binary {
   "left": Literal {
+    "context": "regular",
     "value": 3,
   },
   "operator": Token {
@@ -770,6 +809,7 @@ Binary {
     "type": 9,
   },
   "right": Literal {
+    "context": "regular",
     "value": 1,
   },
 }
@@ -794,6 +834,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 2,
     },
   },
@@ -813,6 +854,7 @@ Binary {
     "type": 9,
   },
   "right": Literal {
+    "context": "regular",
     "value": 2,
   },
 }
@@ -837,6 +879,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 3,
     },
   },
@@ -872,6 +915,7 @@ Binary {
       "type": 6,
     },
     "right": Literal {
+      "context": "regular",
       "value": 3,
     },
   },
@@ -880,48 +924,56 @@ Binary {
 
 exports[`Expression Parsing Parses primary characters correctly 1`] = `
 Literal {
+  "context": "regular",
   "value": 3,
 }
 `;
 
 exports[`Expression Parsing Parses primary characters correctly 2`] = `
 Literal {
+  "context": "regular",
   "value": 321,
 }
 `;
 
 exports[`Expression Parsing Parses primary characters correctly 3`] = `
 Literal {
+  "context": "regular",
   "value": 0.3,
 }
 `;
 
 exports[`Expression Parsing Parses primary characters correctly 4`] = `
 Literal {
+  "context": "regular",
   "value": 0.321,
 }
 `;
 
 exports[`Expression Parsing Parses primary characters correctly 5`] = `
 Literal {
+  "context": "regular",
   "value": 321.123,
 }
 `;
 
 exports[`Expression Parsing Parses primary characters correctly 6`] = `
 Literal {
+  "context": "regular",
   "value": "",
 }
 `;
 
 exports[`Expression Parsing Parses primary characters correctly 7`] = `
 Literal {
+  "context": "regular",
   "value": "hello",
 }
 `;
 
 exports[`Expression Parsing Parses primary characters correctly 8`] = `
 Literal {
+  "context": "regular",
   "value": "
         <strong>
           Independent Woman
@@ -932,18 +984,21 @@ Literal {
 
 exports[`Expression Parsing Parses primary characters correctly 9`] = `
 Literal {
+  "context": "regular",
   "value": true,
 }
 `;
 
 exports[`Expression Parsing Parses primary characters correctly 10`] = `
 Literal {
+  "context": "regular",
   "value": false,
 }
 `;
 
 exports[`Expression Parsing Parses primary characters correctly 11`] = `
 Literal {
+  "context": "regular",
   "value": null,
 }
 `;
@@ -966,6 +1021,7 @@ Unary {
     "type": 6,
   },
   "right": Literal {
+    "context": "regular",
     "value": 3,
   },
 }
@@ -989,6 +1045,7 @@ Unary {
     "type": 11,
   },
   "right": Literal {
+    "context": "regular",
     "value": 3,
   },
 }
