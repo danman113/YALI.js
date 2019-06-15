@@ -1,28 +1,33 @@
 // Class Example
-class Lox {
-  breakfast() {
-    print "Toast";
-    this.hello = "toast";
-    return this.hello;
+class Doughnut {
+  init(name) {
+    this.name = name;
+  }
+
+  cook() {
+    var name = "";
+    if (this.name) {
+      name = this.name + " ";
+    }
+    print "You fry the " + name + "Doughnut until golden brown.";
   }
 }
+
+class BostonCream < Doughnut {
+  init() {
+    super.init("Boston Cream");
+  }
+}
+
+Doughnut("Cruller").cook();
+
+BostonCream().cook();
 
 fun hello () {
   print "Would you like some breakfast?";
 }
 
-print Lox;
-
+print BostonCream;
+print Doughnut;
+print BostonCream();
 print hello;
-var loxInstance = Lox();
-
-loxInstance.category = "Breakfast";
-print loxInstance.category;
-print loxInstance.breakfast();
-
-print Lox();
-
-// class Bagel {}
-// var bagel = Bagel();
-// print bagel; // Prints "Bagel instance".
-// print bagel.lox;

@@ -7,6 +7,7 @@ const {
   Literal,
   While,
   Class,
+  Super,
   Get,
   Set,
   This,
@@ -53,6 +54,12 @@ class Parser {
 
   classDeclaration() {
     const name = this.consume(token.IDENTIFIER, `Expected class name`)
+
+    let superClass = null
+    if (this.match(token.LESS)) {
+      superClass = new Var(this.consume(token.IDENTIFIER, `Expected superclass name after "<"`))
+    }
+
     this.consume(token.LEFT_BRACE, 'expected "{" before class body')
 
     let methods = []
@@ -61,7 +68,7 @@ class Parser {
     }
 
     this.consume(token.RIGHT_BRACE, 'expected "}" after class body')
-    return new Class(name, methods)
+    return new Class(name, methods, superClass)
   }
 
   fun(type) {
@@ -293,6 +300,12 @@ class Parser {
     if (this.match(token.TRUE)) return new Literal(true)
     if (this.match(token.NIL)) return new Literal(null)
     if (this.match(token.NUMBER, token.STRING)) return new Literal(this.previous().literal)
+    if (this.match(token.SUPER)) {
+      const keyword = this.previous()
+      this.consume(token.DOT, 'Expected "." after super statement')
+      const method = this.consume(token.IDENTIFIER, 'Expected superclass method name')
+      return new Super(keyword, method)
+    }
     if (this.match(token.THIS)) return new This(this.previous())
     if (this.match(token.IDENTIFIER)) return new Var(this.previous())
 
@@ -301,8 +314,6 @@ class Parser {
       this.consume(token.RIGHT_PAREN, `Expect ')' after expression.`)
       return new Grouping(expr)
     }
-
-    console.log('primary')
 
     throw ParseError('Expected Expression', this.peek())
   }

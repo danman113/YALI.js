@@ -177,7 +177,6 @@ class Tokenizer {
           this.handleIdentifiers()
         } else {
           // Column isn't -1 because we haven't iterated column yet
-          console.log(LoxError)
           throw new LoxError(
             `Unexpected character ${c}`,
             this.startPosition,

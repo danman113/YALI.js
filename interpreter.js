@@ -6,6 +6,7 @@ const {
   Literal,
   Logical,
   Class,
+  Super,
   Get,
   Set,
   Var,
@@ -73,10 +74,11 @@ class LoxCallable {
 }
 
 class LoxClass extends LoxCallable {
-  constructor(name, methods) {
+  constructor(name, methods, superclass) {
     super()
     this.name = name
     this.methods = methods
+    this.superclass = superclass
   }
 
   call(interpreter, args) {
@@ -84,6 +86,14 @@ class LoxClass extends LoxCallable {
     const init = this.methods.get('init')
     if (init) init.bind(instance).call(interpreter, args, true)
     return instance
+  }
+
+  getMethod(name, instance) {
+    if (this.methods.has(name)) return this.methods.get(name).bind(instance)
+
+    if (this.superclass) return this.superclass.getMethod(name, instance)
+
+    return null
   }
 
   toString() {
@@ -101,7 +111,8 @@ class LoxInstance {
     const name = token.lexeme
     if (this.fields.has(name)) return this.fields.get(name)
 
-    if (this.klass.methods.has(name)) return this.klass.methods.get(name).bind(this)
+    const method = this.klass.getMethod(name, this)
+    if (method) return method
 
     throw runtimeError(`Undefined property "${name}"`, token)
     // return null
@@ -141,6 +152,7 @@ class Interpreter {
     else if (expr instanceof Get) return this.visitGet(expr)
     else if (expr instanceof Set) return this.visitSet(expr)
     else if (expr instanceof This) return this.visitThis(expr)
+    else if (expr instanceof Super) return this.visitSuper(expr)
     else if (expr instanceof Logical) return this.visitLogical(expr)
     else if (expr instanceof Call) return this.visitCall(expr)
     else if (expr instanceof While) return this.visitWhile(expr)
@@ -213,14 +225,32 @@ class Interpreter {
   }
 
   visitClass(stmt) {
+    let superClass = null
+    if (stmt.superclass) {
+      superClass = this.evaluate(stmt.superclass)
+      if (!(superClass instanceof LoxClass))
+        throw runtimeError('Superclass must be a class', stmt.superclass.name)
+    }
+
     // We set the name before initializing it so classes can self-reference
     this.environment.set(stmt.name, null)
+
+    if (superClass) {
+      this.environment = new Environment(this.environment)
+      this.environment.set({ lexeme: 'super' }, superClass)
+    }
+
     const methods = new Map()
     for (let method of stmt.methods) {
       const fun = new LoxCallable(method, this.environment)
       methods.set(method.name.lexeme, fun)
     }
-    const klass = new LoxClass(stmt.name.lexeme, methods)
+
+    const klass = new LoxClass(stmt.name.lexeme, methods, superClass)
+
+    // Pop "Super" off the environment after creating the class
+    if (superClass) this.environment = this.environment.enclosing
+
     this.environment.assign(stmt.name, klass)
     return null
   }
@@ -247,6 +277,17 @@ class Interpreter {
 
   visitThis(expr) {
     return this.environment.get({ name: expr.keyword })
+  }
+
+  visitSuper(expr) {
+    const methodName = expr.method.lexeme
+    const superclass = this.environment.get(new Var(expr.keyword))
+    const instance = this.environment.get(new Var({ lexeme: 'this' }))
+    const method = superclass.getMethod(methodName, instance)
+    if (!method) {
+      throw runtimeError(`Undefined property "${methodName}"`, expr.method)
+    }
+    return method
   }
 
   visitBlock(expr) {

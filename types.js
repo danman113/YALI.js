@@ -116,9 +116,17 @@ class This {
 }
 
 class Class {
-  constructor(name, methods) {
+  constructor(name, methods, superclass = null) {
     this.name = name
     this.methods = methods
+    this.superclass = superclass
+  }
+}
+
+class Super {
+  constructor(keyword, method) {
+    this.keyword = keyword
+    this.method = method
   }
 }
 
@@ -140,6 +148,7 @@ module.exports = {
   Class,
   Get,
   Set,
+  Super,
   Literal,
   Return,
   Logical,
