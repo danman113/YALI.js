@@ -1,0 +1,6 @@
+*.test.js
+docs/
+examples/
+__snapshots__
+.cache
+dist/

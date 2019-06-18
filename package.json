@@ -1,6 +1,6 @@
 {
   "name": "yali",
-  "version": "0.10.2",
+  "version": "1.0.0",
   "description": "Yet Another Lox Interpreter. Javascript Implementation of the Lox Programming Language",
   "main": "index.js",
   "bin": {

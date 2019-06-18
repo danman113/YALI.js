@@ -67,7 +67,7 @@ run(
 ```
 
 ## Parsing
-YALI.js also provides a `parse` function to tokenize and parse lox source code, returning an array of AST nodes that can be manipulated as desired. See any of the [transpiler examples](./transpilers/python) for reference.
+YALI.js also provides a `parse` function to tokenize and parse lox source code, returning an array of AST nodes that can be manipulated as desired. See any of the [transpiler examples](./transpilers/python.js) for reference.
 
 
 ## Contribute
