@@ -1,4 +1,4 @@
-const Interpreter = require('./interpreter')
+const { Interpreter } = require('./interpreter')
 const Tokenizer = require('./tokenizer')
 const Parser = require('./parser')
 

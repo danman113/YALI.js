@@ -385,4 +385,8 @@ class Interpreter {
   }
 }
 
-module.exports = Interpreter
+module.exports = {
+  Interpreter,
+  LoxClass,
+  LoxInstance
+}

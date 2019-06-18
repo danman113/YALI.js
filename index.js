@@ -1,6 +1,6 @@
 const Tokenizer = require('./tokenizer')
 const Parser = require('./parser')
-const Interpreter = require('./interpreter')
+const { Interpreter, LoxClass, LoxInstance } = require('./interpreter')
 const Environment = require('./environment')
 
 const run = (code, environment, printfn, debug = false) => {
@@ -29,5 +29,10 @@ const parse = code => {
 module.exports = {
   run,
   parse,
+  Parser,
+  LoxClass,
+  Tokenizer,
+  LoxInstance,
+  Interpreter,
   Environment
 }
