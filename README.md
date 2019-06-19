@@ -11,7 +11,7 @@ This is yet another Javascript Implementation.
 ## Installation
 
 ```bash
-$ npm install yali.js
+$ npm install yalijs
 ```
 
 ## CLI Usage
@@ -49,11 +49,12 @@ run(source_code, environment = new Environment(), printfn = console.log, debug =
 
 You can pass in an `environment` object, which lets you define built-in variables and functions like so:
 ```javascript
-const { run, Environment } = require('yali')
+const { run, Environment } = require('yalijs')
 const env = new Environment()
 env.setBuiltin('owner', 'dberezin')
 env.setBuiltin('meaning_of_life', 42)
 env.setBuiltin('alert', (interpreter, arg) => alert(arg[0]))
+run('print meaning_of_life;', env)
 ```
 
 You can also pass in a `printfn` that will be called for every `print` statement. Here's an example for capitalizing each word in the stdout:
