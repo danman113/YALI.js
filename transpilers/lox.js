@@ -6,9 +6,11 @@ const {
   Literal,
   While,
   // @TODO: Support Classes
-  // Class,
-  // Get,
-  // Set,
+  Class,
+  Get,
+  Set: SetExpr,
+  Super,
+  This,
   Grouping,
   Return,
   LoxFunction,
@@ -46,14 +48,16 @@ ASTNodeMap.set(Condition, ({ condition, thenBranch, elseBranch }, scope, options
   return conditionSection + thenSection + (elseSection ? ` else ${elseSection}` : '')
 })
 
-ASTNodeMap.set(LoxFunction, ({ bodyStatements: body, name: { lexeme: name }, params}, scope, options) => {
+const printFunction = ({ bodyStatements: body, name: { lexeme: name }, params}, scope, options, func = true) => {
   const parameters = params.map(token => token.lexeme)
-  const head = `fun ${name}${condChar(options.spaceBeforeParams)}(${parameters.join(', ')}) {`
+  const id = func ? 'fun ' : ''
+  const head = id + `${name}${condChar(options.spaceBeforeParams)}(${parameters.join(', ')}) {`
   const fnBody = body.map(stmt => printLoxAST(stmt, scope + 1, options))
   const tail = options.indent.repeat(scope) + '}' + condChar(options.functionNewlines, '\n')
   return [head, ...fnBody, tail].join('\n')
-})
+}
 
+ASTNodeMap.set(LoxFunction, printFunction)
 
 const handleWhileLoop = ({ body, condition }, scope, options) => {
   const cond = printLoxAST(condition)
@@ -86,6 +90,36 @@ ASTNodeMap.set(While, (node, scope, options) => {
   }
 })
 
+ASTNodeMap.set(Class, ({ name, superclass, methods }, scope, options) => {
+  let superclassStr  = ''
+  if (superclass) {
+    const superClassName = superclass.name.lexeme
+    superclassStr = ` < ${superClassName}`
+  }
+  const head = `class ${name.lexeme}${superclassStr} {`
+  const tail = options.indent.repeat(scope) + '}'
+  let body = methods.map(node => options.indent.repeat(scope + 1) + printFunction(node, scope + 1, options, false))
+  return [head, ...body, tail].join('\n')
+})
+
+ASTNodeMap.set(Get, ({ name, object }, scope, options) => {
+  const nameStr = name.lexeme ? name.lexeme : printLoxAST(name, scope, options, false)
+  const objectStr = printLoxAST(object, scope, options, false)
+  return objectStr + '.' + nameStr
+})
+
+ASTNodeMap.set(SetExpr, ({ name, object, value }, scope, options) => {
+  const nameStr = name.lexeme ? name.lexeme : printLoxAST(name, scope, options, false)
+  const objectStr = printLoxAST(object, scope, options, false)
+  const val = printLoxAST(value, scope, options)
+  return objectStr + '.' + nameStr + ' = ' + val
+})
+
+ASTNodeMap.set(Super, ({ method: { lexeme: methodName }}) => {
+  return `super.${methodName}`
+})
+
+ASTNodeMap.set(This, ({ keyword }) => keyword.lexeme)
 
 const blockForLoop = ({ statements }, scope, options) => {
   const iter = printLoxAST(statements[0], scope, options, false)
@@ -162,7 +196,7 @@ const printLoxAST = (node, scope = 0, optionsOverride = {}, initialIndent = true
     const indentation = (initialIndent ? options.indent.repeat(scope) : '')
     return indentation + ASTNodeMap.get(node.constructor)(node, scope, options)
   }
-  throw new Error(`Don't support classes yet`)
+  // throw new Error(`Don't support classes yet`)
 }
 
 module.exports = {

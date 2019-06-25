@@ -97,6 +97,7 @@ formatButton.onclick = () => {
   try {
     const ast = parse(code.value)
     global.ast = ast
+    // console.log(ast.map(stmt => printLoxAST(stmt)).join('\n'))
     code.value = ast.map(stmt => printLoxAST(stmt)).join('\n')
     handleError(null)
   } catch (e) {
