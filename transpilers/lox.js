@@ -5,7 +5,6 @@ const {
   Call,
   Literal,
   While,
-  // @TODO: Support Classes
   Class,
   Get,
   Set: SetExpr,

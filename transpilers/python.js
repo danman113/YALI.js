@@ -5,10 +5,11 @@ const {
   Call,
   Literal,
   While,
-  // @TODO: Support Classes
-  // Class,
-  // Get,
-  // Set,
+  Class,
+  Get,
+  Set: SetExpr,
+  Super,
+  This,
   Grouping,
   Return,
   LoxFunction,
@@ -23,6 +24,8 @@ const {
 
 // const condChar = (condition, replacer = ' ') => condition ? replacer : ''
 const indentation = (scope, options) => options.indent.repeat(scope)
+
+let lastSuperclass = 'super'
 
 const ASTNodeMap = new Map()
 
@@ -48,13 +51,19 @@ ASTNodeMap.set(Condition, ({ condition, thenBranch, elseBranch }, scope, options
   return conditionSection + thenSection + (elseSection ? `\n${indentation(scope, options)}else:\n${elseSection}` : '')
 })
 
-ASTNodeMap.set(LoxFunction, ({ bodyStatements: body, name: { lexeme: name }, params}, scope, options) => {
+const printFunction = ({ bodyStatements: body, name: { lexeme: name }, params}, scope, options, func = true) => {
   const parameters = params.map(token => token.lexeme)
+  if (!func) {
+    parameters.unshift('this')
+    if (name === 'init') name = '__init__'
+  }
   const head = indentation(scope, options) + `def ${name}(${parameters.join(', ')}):`
   // Python doesn't have blank function declarations
   const fnBody = body.length > 0 ? body.map(stmt => loxToPython2(stmt, scope + 1, options)) : [indentation(scope + 1, options) + 'pass']
   return [head, ...fnBody].join('\n')
-})
+}
+
+ASTNodeMap.set(LoxFunction, printFunction)
 
 ASTNodeMap.set(While, ({ body, condition }, scope, options) => {
   const cond = loxToPython2(condition)
@@ -62,6 +71,38 @@ ASTNodeMap.set(While, ({ body, condition }, scope, options) => {
   const bodySection = loxToPython2(body, scope + 1, options, false)
   return conditionSection + bodySection
 })
+
+ASTNodeMap.set(Class, ({ name, superclass, methods }, scope, options) => {
+  let superclassStr  = '()'
+  if (superclass) {
+    lastSuperclass = superclass.name.lexeme
+    superclassStr = `(${superclass.name.lexeme})`
+  }
+  const head = indentation(scope, options) + `class ${name.lexeme}${superclassStr}:`
+  let body = methods.map(node => printFunction(node, scope + 1, options, false))
+  return [head, ...body].join('\n')
+})
+
+ASTNodeMap.set(Get, ({ name, object }, scope, options) => {
+  let nameStr = name.lexeme ? name.lexeme : loxToPython2(name, scope, options, false)
+  const objectStr = loxToPython2(object, scope, options, false)
+  return objectStr + '.' + nameStr
+})
+
+ASTNodeMap.set(SetExpr, ({ name, object, value }, scope, options) => {
+  const nameStr = name.lexeme ? name.lexeme : loxToPython2(name, scope, options, false)
+  const objectStr = loxToPython2(object, scope, options, false)
+  const val = loxToPython2(value, scope, options)
+  return objectStr + '.' + nameStr + ' = ' + val
+})
+
+ASTNodeMap.set(Super, ({ method: { lexeme: methodName }}) => {
+  if (methodName === 'init') methodName = '__init__'
+  return `${lastSuperclass}.${methodName}`
+})
+
+ASTNodeMap.set(This, ({ keyword }) => keyword.lexeme)
+
 
 ASTNodeMap.set(Block, ({ statements }, scope, options, initialIndent) => statements.map(stmt => loxToPython2(stmt, scope, options, initialIndent)).join('\n'))
 
@@ -90,9 +131,11 @@ ASTNodeMap.set(Unary, node => {
 
 
 ASTNodeMap.set(Call, node => {
-  const args = node.arguments.map(args => loxToPython2(args)).join(', ')
+  const args = node.arguments.map(args => loxToPython2(args))
   const callee = loxToPython2(node.callee)
-  return `${callee}(${args})`
+  if (String(callee).endsWith('__init__')) args.unshift('this')
+  const argsStr = args.join(', ')
+  return `${callee}(${argsStr})`
 })
 
 ASTNodeMap.set(Assignment, node => {
@@ -119,7 +162,7 @@ const loxToPython2 = (node, scope = 0, optionsOverride = {}) => {
   if (ASTNodeMap.has(node.constructor)) {
     return ASTNodeMap.get(node.constructor)(node, scope, options)
   }
-  throw new Error(`Don't support classes yet`, node.constructor)
+  throw new Error(`Don't support that AST node yet`, node.constructor)
 }
 
 module.exports = {
