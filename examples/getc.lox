@@ -1,0 +1,6 @@
+
+var c = getc();
+
+print c;
+
+print "done";

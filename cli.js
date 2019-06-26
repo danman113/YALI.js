@@ -26,9 +26,24 @@ const printErrorMessage = (e, code) => {
   }
 }
 
+let cache = []
+const getChar = () => {
+  if (cache.length <= 0) {
+    const input = fs.readFileSync(0).toString()
+    input.split('').forEach(char => cache.push(char))
+  }
+  return cache.shift()
+}
+
 const makeCLIEnvironment = () => {
   const env = new Environment()
   env.setBuiltin('readFile', (_vars, args) => fs.readFileSync(args[0], 'utf8'))
+  env.setBuiltin('exit', (_vars, args) => process.exit(args[0] || 0))
+  env.setBuiltin('chr', (_vars, args) => String.fromCharCode(args[0]))
+  env.setBuiltin('getc', () => {
+    const val = getChar()
+    return val ? val.charCodeAt(0) : -1
+  })
   return env
 }
 

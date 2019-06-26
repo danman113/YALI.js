@@ -22,7 +22,6 @@ const {
   Condition
 } = require('../types')
 
-// const condChar = (condition, replacer = ' ') => condition ? replacer : ''
 const indentation = (scope, options) => options.indent.repeat(scope)
 
 let lastSuperclass = 'super'
@@ -104,7 +103,12 @@ ASTNodeMap.set(Super, ({ method: { lexeme: methodName }}) => {
 ASTNodeMap.set(This, ({ keyword }) => keyword.lexeme)
 
 
-ASTNodeMap.set(Block, ({ statements }, scope, options, initialIndent) => statements.map(stmt => loxToPython2(stmt, scope, options, initialIndent)).join('\n'))
+ASTNodeMap.set(Block, ({ statements }, scope, options, initialIndent) => {
+  if (statements.length <= 0) {
+    return indentation(scope, options) + 'pass'
+  }
+  return statements.map(stmt => loxToPython2(stmt, scope, options, initialIndent)).join('\n')
+})
 
 // Expressions
 ASTNodeMap.set(Var, ({ name: { lexeme } }) => lexeme)
@@ -123,8 +127,10 @@ ASTNodeMap.set(Binary, handleBinary)
 
 ASTNodeMap.set(Logical, handleBinary)
 
+const handleUnary = unary => unary === '!' ? 'not ' : unary
+
 ASTNodeMap.set(Unary, node => {
-  const operator = node.operator.lexeme
+  const operator = handleUnary(node.operator.lexeme)
   const right = loxToPython2(node.right)
   return operator + right
 })
@@ -144,21 +150,25 @@ ASTNodeMap.set(Assignment, node => {
   return name + ' = ' + value
 })
 
-ASTNodeMap.set(Literal, ({ value }) => {
+const handleLiteral = value => {
   if (typeof value === 'string') {
     return `"${value}"`
+  } else if (typeof value === 'boolean') {
+    return value ? 'True' : 'False'
   } else if (value === null) {
     return 'None'
   } else {
     return value
   }
-})
+}
+
+ASTNodeMap.set(Literal, ({ value }) => handleLiteral(value))
 
 const loxToPython2 = (node, scope = 0, optionsOverride = {}) => {
   const options = Object.assign({}, {
     indent: '\t',
   }, optionsOverride)
-
+  if (!(node instanceof Object)) return handleLiteral(node)
   if (ASTNodeMap.has(node.constructor)) {
     return ASTNodeMap.get(node.constructor)(node, scope, options)
   }
