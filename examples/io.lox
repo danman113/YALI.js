@@ -1,0 +1,23 @@
+fun getString() {
+  var string = "";
+  var newC = getc();
+  while (newC > 0 or newC == 10) {
+    string = string + chr(newC);
+    newC = getc();
+  }
+  return string;
+}
+
+var filename = getString();
+// var filename = "LICENSE";
+
+print "filename: " + filename;
+
+var contents = readFile(filename);
+if (contents == "ERROR") {
+  print "Error reading file!";
+} else {
+  print "File contents: ";
+  print contents;
+}
+

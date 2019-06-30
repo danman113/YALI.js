@@ -1,9 +1,12 @@
 #! /usr/bin/env node
 const fs = require('fs')
+const path = require('path')
 const chalk = require('chalk')
 const { parse } = require('./index')
 const { loxToPython2 } = require('./transpilers/python')
 const { formatLoxError } = require('./errors')
+
+const lox_std_lib_shim = fs.readFileSync(path.resolve(__dirname, 'lox2python_std_lib.py'), 'utf8')
 
 let options = {}
 
@@ -19,9 +22,11 @@ const fmtFile = (filename, outputfile = 'a.py') => {
   try {
     const file = fs.readFileSync(filename, 'utf8')
     try {
-      const newText = parse(file)
-        .map(stmt => loxToPython2(stmt, 0, options))
-        .join('\n')
+      const newText =
+        lox_std_lib_shim +
+        parse(file)
+          .map(stmt => loxToPython2(stmt, 0, options))
+          .join('\n')
       if (!options.silent) console.log(newText)
       if (options.write) fs.writeFileSync(outputfile, newText)
     } catch (e) {

@@ -1,0 +1,13 @@
+var a = "!";
+
+fun stringBuilder(init) {
+  var string = init;
+  fun append (str) {
+    string = string + str + a;
+    return string;
+  }
+  return append;
+}
+
+var strbuilder = stringBuilder("hello");
+print strbuilder(" world");

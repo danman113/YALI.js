@@ -22,6 +22,8 @@ const {
   Condition
 } = require('../types')
 
+const closure = variable => `closure.get("${variable}")`
+
 const indentation = (scope, options) => options.indent.repeat(scope)
 
 let lastSuperclass = 'super'
@@ -33,13 +35,19 @@ ASTNodeMap.set(ExpressionStatement, (node, scope, options, initialIndent) => ind
 
 ASTNodeMap.set(PrintStatement, (node, scope, options) => indentation(scope, options) + 'print ' + loxToPython2(node.expression))
 
-ASTNodeMap.set(Return, (node, scope, options) => indentation(scope, options) + 'return ' + loxToPython2(node.value))
+ASTNodeMap.set(Return, (node, scope, options) => {
+  const retVal = `retval = ${loxToPython2(node.value)}`
+  const pop = 'closure = closure.pop()'
+  const ret = 'return retval'
+  return [retVal, pop, ret].map(str => indentation(scope, options) + str).join('\n')
+})
 
 ASTNodeMap.set(VarStatement, (node, scope, options) => {
   // Python doesn't have plain declarations...
-  if (!node.initializer) return ''
   const name = node.name.lexeme
-  return indentation(scope, options) + `${name} = ${loxToPython2(node.initializer)}`
+  // @TODO: Work on this to handle python scoping correctly
+  if (!node.initializer) return indentation(scope, options) + `closure.declare("${name}", None)`
+  return indentation(scope, options) + `closure.declare("${name}", ${loxToPython2(node.initializer)})`
 })
 
 ASTNodeMap.set(Condition, ({ condition, thenBranch, elseBranch }, scope, options) => {
@@ -56,10 +64,13 @@ const printFunction = ({ bodyStatements: body, name: { lexeme: name }, params}, 
     parameters.unshift('this')
     if (name === 'init') name = '__init__'
   }
-  const head = indentation(scope, options) + `def ${name}(${parameters.join(', ')}):`
+  const head = indentation(scope, options) + `def ${name}(c, ${parameters.join(', ')}):`
+  const env = ['global closure', 'closure = LoxEnvironment(c)'].map(str => indentation(scope + 1, options) + str)
+  const arg = parameters.map(str => indentation(scope + 1, options) + `closure.declare("${str}", ${str})`)
   // Python doesn't have blank function declarations
   const fnBody = body.length > 0 ? body.map(stmt => loxToPython2(stmt, scope + 1, options)) : [indentation(scope + 1, options) + 'pass']
-  return [head, ...fnBody].join('\n')
+  const tail = func ? (indentation(scope, options) + `closure.declare("${name}", LoxFunction(${name}, closure))`) : ''
+  return [head, ...env, ...arg, ...fnBody, tail].join('\n')
 }
 
 ASTNodeMap.set(LoxFunction, printFunction)
@@ -77,9 +88,11 @@ ASTNodeMap.set(Class, ({ name, superclass, methods }, scope, options) => {
     lastSuperclass = superclass.name.lexeme
     superclassStr = `(${superclass.name.lexeme})`
   }
-  const head = indentation(scope, options) + `class ${name.lexeme}${superclassStr}:`
+  const className = name.lexeme
+  const head = indentation(scope, options) + `class ${className}${superclassStr}:`
   let body = methods.map(node => printFunction(node, scope + 1, options, false))
-  return [head, ...body].join('\n')
+  const tail = indentation(scope, options) + `closure.declare("${className}", ${className})`
+  return [head, ...body, tail].join('\n')
 })
 
 ASTNodeMap.set(Get, ({ name, object }, scope, options) => {
@@ -111,7 +124,7 @@ ASTNodeMap.set(Block, ({ statements }, scope, options, initialIndent) => {
 })
 
 // Expressions
-ASTNodeMap.set(Var, ({ name: { lexeme } }) => lexeme)
+ASTNodeMap.set(Var, ({ name: { lexeme } }) => closure(lexeme))
 
 ASTNodeMap.set(Grouping, ({ expression }) => '(' + loxToPython2(expression) + ')')
 
@@ -147,7 +160,7 @@ ASTNodeMap.set(Call, node => {
 ASTNodeMap.set(Assignment, node => {
   const name = node.name.lexeme
   const value = loxToPython2(node.value)
-  return name + ' = ' + value
+  return `closure.assign("${name}", ${value})`
 })
 
 const handleLiteral = value => {

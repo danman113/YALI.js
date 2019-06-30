@@ -37,7 +37,13 @@ const getChar = () => {
 
 const makeCLIEnvironment = () => {
   const env = new Environment()
-  env.setBuiltin('readFile', (_vars, args) => fs.readFileSync(args[0], 'utf8'))
+  env.setBuiltin('readFile', (_vars, args) => {
+    try {
+      return fs.readFileSync(args[0], 'utf8')
+    } catch (e) {
+      return 'ERROR'
+    }
+  })
   env.setBuiltin('exit', (_vars, args) => process.exit(args[0] || 0))
   env.setBuiltin('chr', (_vars, args) => String.fromCharCode(args[0]))
   env.setBuiltin('getc', () => {
