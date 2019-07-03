@@ -1,8 +1,8 @@
 // Interactive Iterative Fibonacci
 var a = 0;
 var b = 1;
-var limit = prompt("Limit to find fib numbers", 10000);
-// var limit = 1000000;
+// var limit = prompt("Limit to find fib numbers", 10000);
+var limit = 1000000;
 
 while (a < limit) {
   print a;
