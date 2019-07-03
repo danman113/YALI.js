@@ -68,9 +68,9 @@ const printFunction = ({ bodyStatements: body, name: { lexeme: name }, params}, 
   const env = ['global closure', 'closure = LoxEnvironment(c)'].map(str => indentation(scope + 1, options) + str)
   const arg = parameters.map(str => indentation(scope + 1, options) + `closure.declare("${str}", ${str})`)
   // Python doesn't have blank function declarations
-  const fnBody = body.length > 0 ? body.map(stmt => loxToPython2(stmt, scope + 1, options)) : [indentation(scope + 1, options) + 'pass']
+  const fnBody = body.map(stmt => loxToPython2(stmt, scope + 1, options))
   const closureCleanup = [
-    (indentation(scope + 1, options) + `closure.pop()`),
+    (indentation(scope + 1, options) + `closure = closure.pop()`),
     (indentation(scope, options) + `closure.declare("${name}", LoxFunction(${name}, closure))`)
   ]
   const tail = func ? closureCleanup : ['']
@@ -121,12 +121,9 @@ ASTNodeMap.set(This, ({ keyword }) => keyword.lexeme)
 
 
 ASTNodeMap.set(Block, ({ statements }, scope, options, initialIndent) => {
-  if (statements.length <= 0) {
-    return indentation(scope, options) + 'pass'
-  }
   const setup = ['closure = LoxEnvironment(closure)'].map(str => indentation(scope, options) + str)
   const code = statements.map(stmt => loxToPython2(stmt, scope, options, initialIndent))
-  const cleanup = indentation(scope, options) + 'closure.pop()'
+  const cleanup = indentation(scope, options) + 'closure = closure.pop()'
   return [...setup, ...code, cleanup].join('\n')
 })
 

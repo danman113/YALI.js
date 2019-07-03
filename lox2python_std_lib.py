@@ -49,7 +49,11 @@ class LoxFunction():
     self.func = func
     self.closure = closure
   def __call__(self, *args):
-    return self.func(self.closure, *args)
+    global closure
+    oldEnv = closure
+    retval = self.func(LoxEnvironment(self.closure), *args)
+    closure = oldEnv
+    return retval
 
 
 closure = LoxEnvironment()
