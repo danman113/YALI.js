@@ -8,8 +8,8 @@ fun getString() {
   return string;
 }
 
-var filename = getString();
-// var filename = "LICENSE";
+// var filename = getString();
+var filename = "LICENSE";
 
 print "filename: " + filename;
 

@@ -272,7 +272,8 @@ class Interpreter {
 
     var val = this.evaluate(expr.value)
 
-    return object.set(expr.name, val)
+    object.set(expr.name, val)
+    return val
   }
 
   visitThis(expr) {

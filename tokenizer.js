@@ -25,7 +25,7 @@ tokens.forEach((token, i) => {
   tokenEnum[token] = i
 })
 
-const keywords = {
+const keywords = new Map(Object.entries({
   and: tokenEnum.AND,
   class: tokenEnum.CLASS,
   else: tokenEnum.ELSE,
@@ -42,7 +42,7 @@ const keywords = {
   true: tokenEnum.TRUE,
   var: tokenEnum.VAR,
   while: tokenEnum.WHILE
-}
+}))
 
 const tokenMap = {
   '(': tokenizer => {
@@ -159,8 +159,8 @@ class Tokenizer {
   handleIdentifiers() {
     while (isAlphaNumeric(this.peek())) this.chomp()
     const value = this.source.substring(this.start, this.current)
-    if (keywords[value]) {
-      this.addToken(keywords[value], value)
+    if (keywords.has(value)) {
+      this.addToken(keywords.get(value), value)
     } else {
       this.addToken(tokenEnum.IDENTIFIER, value)
     }

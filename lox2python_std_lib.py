@@ -1,22 +1,22 @@
 import sys
 import time
 
-def readFile(filename):
+def readFile(c, filename):
   file = open(filename, "r")
   return file.read()
 
-def clock():
+def clock(c):
   return time.time()
 
 __lox2python__cache = []
-def getc():
+def getc(c):
   if (len(__lox2python__cache) <= 0):
     for input in sys.stdin:
       __lox2python__cache.extend([ord(char) for char in input])
   # print cache
   return __lox2python__cache.pop(0) if len(__lox2python__cache) > 0 else -1
 
-class LoxEnvironment:
+class lox2python__LoxEnvironment:
   def __init__(self, enclosing = None):
     self.map = dict()
     self.enclosing = enclosing
@@ -44,18 +44,22 @@ class LoxEnvironment:
     self.map[valname] = value
     return self.map[valname]
 
-class LoxFunction():
+lox2python__closure = lox2python__LoxEnvironment()
+
+class lox2python__LoxFunction():
   def __init__(self, func, closure):
     self.func = func
     self.closure = closure
   def __call__(self, *args):
-    global closure
-    oldEnv = closure
-    retval = self.func(LoxEnvironment(self.closure), *args)
-    closure = oldEnv
+    global lox2python__closure
+    oldEnv = lox2python__closure
+    retval = self.func(lox2python__LoxEnvironment(self.closure), *args)
+    lox2python__closure = oldEnv
     return retval
 
-
-closure = LoxEnvironment()
-
+lox2python__closure.declare('readFile', lox2python__LoxFunction(readFile, lox2python__closure))
+lox2python__closure.declare('clock', lox2python__LoxFunction(clock, lox2python__closure))
+lox2python__closure.declare('getc', lox2python__LoxFunction(getc, lox2python__closure))
+lox2python__closure.declare('chr', chr)
+lox2python__closure.declare('exit', exit)
 

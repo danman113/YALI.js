@@ -22,7 +22,12 @@ const {
   Condition
 } = require('../types')
 
-const closure = variable => `closure.get("${variable}")`
+const CLOSURE_NAME = 'lox2python__closure'
+const ENV_NAME = 'lox2python__LoxEnvironment'
+const FUNCTION_NAME = 'lox2python__LoxFunction'
+const FUNCTION_CLOSURE_REFERENCE = 'lox2python__c'
+
+const closure = variable => `${CLOSURE_NAME}.get("${variable}")`
 
 const indentation = (scope, options) => options.indent.repeat(scope)
 
@@ -37,7 +42,7 @@ ASTNodeMap.set(PrintStatement, (node, scope, options) => indentation(scope, opti
 
 ASTNodeMap.set(Return, (node, scope, options) => {
   const retVal = `retval = ${loxToPython2(node.value)}`
-  const pop = 'closure = closure.pop()'
+  const pop = `${CLOSURE_NAME} = ${CLOSURE_NAME}.pop()`
   const ret = 'return retval'
   return [retVal, pop, ret].map(str => indentation(scope, options) + str).join('\n')
 })
@@ -45,9 +50,8 @@ ASTNodeMap.set(Return, (node, scope, options) => {
 ASTNodeMap.set(VarStatement, (node, scope, options) => {
   // Python doesn't have plain declarations...
   const name = node.name.lexeme
-  // @TODO: Work on this to handle python scoping correctly
-  if (!node.initializer) return indentation(scope, options) + `closure.declare("${name}", None)`
-  return indentation(scope, options) + `closure.declare("${name}", ${loxToPython2(node.initializer)})`
+  if (!node.initializer) return indentation(scope, options) + `${CLOSURE_NAME}.declare("${name}", None)`
+  return indentation(scope, options) + `${CLOSURE_NAME}.declare("${name}", ${loxToPython2(node.initializer)})`
 })
 
 ASTNodeMap.set(Condition, ({ condition, thenBranch, elseBranch }, scope, options) => {
@@ -63,15 +67,17 @@ const printFunction = ({ bodyStatements: body, name: { lexeme: name }, params}, 
   if (!func) {
     parameters.unshift('this')
     if (name === 'init') name = '__init__'
+  } else {
+    parameters.unshift(FUNCTION_CLOSURE_REFERENCE)
   }
-  const head = indentation(scope, options) + `def ${name}(c, ${parameters.join(', ')}):`
-  const env = ['global closure', 'closure = LoxEnvironment(c)'].map(str => indentation(scope + 1, options) + str)
-  const arg = parameters.map(str => indentation(scope + 1, options) + `closure.declare("${str}", ${str})`)
+  const head = indentation(scope, options) + `def ${name}(${parameters.join(', ')}):`
+  const env = [`global ${CLOSURE_NAME}`, `${CLOSURE_NAME} = ${ENV_NAME}(${func ? FUNCTION_CLOSURE_REFERENCE : `${CLOSURE_NAME}`})`].map(str => indentation(scope + 1, options) + str)
+  const arg = parameters.map(str => indentation(scope + 1, options) + `${CLOSURE_NAME}.declare("${str}", ${str})`)
   // Python doesn't have blank function declarations
   const fnBody = body.map(stmt => loxToPython2(stmt, scope + 1, options))
   const closureCleanup = [
-    (indentation(scope + 1, options) + `closure = closure.pop()`),
-    (indentation(scope, options) + `closure.declare("${name}", LoxFunction(${name}, closure))`)
+    (indentation(scope + 1, options) + `${CLOSURE_NAME} = ${CLOSURE_NAME}.pop()`),
+    (indentation(scope, options) + `${CLOSURE_NAME}.declare("${name}", ${FUNCTION_NAME}(${name}, ${CLOSURE_NAME}))`)
   ]
   const tail = func ? closureCleanup : ['']
   return [head, ...env, ...arg, ...fnBody, ...tail].join('\n')
@@ -94,13 +100,14 @@ ASTNodeMap.set(Class, ({ name, superclass, methods }, scope, options) => {
   }
   const className = name.lexeme
   const head = indentation(scope, options) + `class ${className}${superclassStr}:`
-  let body = methods.map(node => printFunction(node, scope + 1, options, false))
-  const tail = indentation(scope, options) + `closure.declare("${className}", ${className})`
+  let body = methods.length > 0 ? methods.map(node => printFunction(node, scope + 1, options, false)) : [indentation(scope + 1, options) + 'pass']
+  const tail = indentation(scope, options) + `${CLOSURE_NAME}.declare("${className}", ${className})`
   return [head, ...body, tail].join('\n')
 })
 
 ASTNodeMap.set(Get, ({ name, object }, scope, options) => {
   let nameStr = name.lexeme ? name.lexeme : loxToPython2(name, scope, options, false)
+  if (nameStr === 'init') nameStr = '__init__'
   const objectStr = loxToPython2(object, scope, options, false)
   return objectStr + '.' + nameStr
 })
@@ -121,9 +128,9 @@ ASTNodeMap.set(This, ({ keyword }) => keyword.lexeme)
 
 
 ASTNodeMap.set(Block, ({ statements }, scope, options, initialIndent) => {
-  const setup = ['closure = LoxEnvironment(closure)'].map(str => indentation(scope, options) + str)
+  const setup = [`${CLOSURE_NAME} = ${ENV_NAME}(${CLOSURE_NAME})`].map(str => indentation(scope, options) + str)
   const code = statements.map(stmt => loxToPython2(stmt, scope, options, initialIndent))
-  const cleanup = indentation(scope, options) + 'closure = closure.pop()'
+  const cleanup = indentation(scope, options) + `${CLOSURE_NAME} = ${CLOSURE_NAME}.pop()`
   return [...setup, ...code, cleanup].join('\n')
 })
 
@@ -155,8 +162,9 @@ ASTNodeMap.set(Unary, node => {
 
 ASTNodeMap.set(Call, node => {
   const args = node.arguments.map(args => loxToPython2(args))
-  const callee = loxToPython2(node.callee)
+  let callee = loxToPython2(node.callee)
   if (String(callee).endsWith('__init__')) args.unshift('this')
+  // if (String(callee) === 'init') callee = '__init__'
   const argsStr = args.join(', ')
   return `${callee}(${argsStr})`
 })
@@ -164,7 +172,7 @@ ASTNodeMap.set(Call, node => {
 ASTNodeMap.set(Assignment, node => {
   const name = node.name.lexeme
   const value = loxToPython2(node.value)
-  return `closure.assign("${name}", ${value})`
+  return `${CLOSURE_NAME}.assign("${name}", ${value})`
 })
 
 const handleLiteral = value => {
