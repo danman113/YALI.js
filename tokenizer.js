@@ -25,24 +25,26 @@ tokens.forEach((token, i) => {
   tokenEnum[token] = i
 })
 
-const keywords = new Map(Object.entries({
-  and: tokenEnum.AND,
-  class: tokenEnum.CLASS,
-  else: tokenEnum.ELSE,
-  false: tokenEnum.FALSE,
-  for: tokenEnum.FOR,
-  fun: tokenEnum.FUN,
-  if: tokenEnum.IF,
-  nil: tokenEnum.NIL,
-  or: tokenEnum.OR,
-  print: tokenEnum.PRINT,
-  return: tokenEnum.RETURN,
-  super: tokenEnum.SUPER,
-  this: tokenEnum.THIS,
-  true: tokenEnum.TRUE,
-  var: tokenEnum.VAR,
-  while: tokenEnum.WHILE
-}))
+const keywords = new Map(
+  Object.entries({
+    and: tokenEnum.AND,
+    class: tokenEnum.CLASS,
+    else: tokenEnum.ELSE,
+    false: tokenEnum.FALSE,
+    for: tokenEnum.FOR,
+    fun: tokenEnum.FUN,
+    if: tokenEnum.IF,
+    nil: tokenEnum.NIL,
+    or: tokenEnum.OR,
+    print: tokenEnum.PRINT,
+    return: tokenEnum.RETURN,
+    super: tokenEnum.SUPER,
+    this: tokenEnum.THIS,
+    true: tokenEnum.TRUE,
+    var: tokenEnum.VAR,
+    while: tokenEnum.WHILE
+  })
+)
 
 const tokenMap = {
   '(': tokenizer => {

@@ -4,6 +4,7 @@ fun hello (arg1, arg2) {
     print helloer + " says hello";
   }
   var str = arg1 + " says hello to " + arg2;
+  var bestBool = true;
   var maxAge = 18;
   var age;
   age = maxAge + 3;
