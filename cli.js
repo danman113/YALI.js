@@ -35,11 +35,46 @@ const getChar = () => {
   return cache.shift()
 }
 
-const makeCLIEnvironment = () => {
+class LoxArray {
+  init(_vars, args) {
+    this.internalArray = Array(args[0] || 0).fill(null)
+  }
+  at(_vars, args) {
+    return this.internalArray[args[0]] ?? null
+  }
+  get(_vars, args) {
+    return this.internalArray[args[0]] ?? null
+  }
+  set(_vars, args) {
+    // TODO: Throw error when set is incorrect
+    if (args[0] > this.internalArray.length) return null
+    this.internalArray[args[0]] = args[1]
+    return args[1]
+  }
+  length() {
+    return this.internalArray.length ?? null
+  }
+}
+
+const makeCLIEnvironment = (printfn, debug) => {
+  const evalFile = (_vars, args) => {
+    const code = fs.readFileSync(args[0], 'utf8')
+    const newEnv = makeCLIEnvironment(printfn, debug)
+    let lastLine
+    try {
+      lastLine = run(code, newEnv, printfn, debug)
+    } catch (e) {
+      console.log('Error importing', args[0], ':', e)
+    }
+    return newEnv
+  }
   const env = new Environment()
   env.setBuiltin('readFile', (_vars, args) => fs.readFileSync(args[0], 'utf8'))
+  env.setBuiltin('evalFile', (...args) => evalFile(...args) && null)
+  env.setBuiltin('require', (...args) => evalFile(...args).map.get('exports'))
   env.setBuiltin('exit', (_vars, args) => process.exit(args[0] || 0))
   env.setBuiltin('chr', (_vars, args) => String.fromCharCode(args[0]))
+  env.setBuiltinClass('Array', LoxArray)
   env.setBuiltin('getc', () => {
     const val = getChar()
     return val ? val.charCodeAt(0) : -1
@@ -57,7 +92,7 @@ const runPrompt = () => {
     prompt: prompt,
     historySize: +options.history
   })
-  const env = makeCLIEnvironment()
+  const env = makeCLIEnvironment(console.log, options.debug)
 
   lineReader.on('line', line => {
     let code = line
@@ -76,7 +111,7 @@ const runPrompt = () => {
 const runFile = filename => {
   try {
     const file = fs.readFileSync(filename, 'utf8')
-    const env = makeCLIEnvironment()
+    const env = makeCLIEnvironment(console.log, options.debug)
     try {
       run(file, env, console.log, options.debug)
     } catch (e) {
