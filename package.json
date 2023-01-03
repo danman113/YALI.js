@@ -29,7 +29,7 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "jest": "^24.7.1",
-    "parcel": "^1.12.3",
+    "parcel": "^2.8.2",
     "prettier": "1.17.0"
   },
   "dependencies": {
